@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2025 at 08:21 AM
+-- Generation Time: Mar 25, 2025 at 08:42 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -76,7 +76,7 @@ INSERT INTO `tb_durable_articles` (`durable_articles_id`, `name`, `brand`, `seri
 
 CREATE TABLE `tb_member` (
   `member_id` int(11) NOT NULL,
-  `academic_ranks` varchar(255) NOT NULL,
+  `academic_ranks` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `gender` enum('female','male','LGBTQ+') NOT NULL,
@@ -129,20 +129,42 @@ CREATE TABLE `tb_room` (
   `number` varchar(11) NOT NULL,
   `max_occupancy` int(11) NOT NULL,
   `floor` int(11) NOT NULL,
-  `table_typ` enum('Slob','Lecture','Lab') NOT NULL,
-  `room_for` enum('students','teacher') NOT NULL
+  `typ_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_room`
 --
 
-INSERT INTO `tb_room` (`room_id`, `number`, `max_occupancy`, `floor`, `table_typ`, `room_for`) VALUES
-(2207, 'Sc2-207', 40, 2, 'Lecture', 'students'),
-(2212, 'Sc2-212', 30, 2, 'Slob', 'students'),
-(2301, 'Sc2-301', 4, 3, 'Lecture', 'teacher'),
-(2307, 'Sc2-307', 30, 3, 'Lab', 'students'),
-(2411, 'Sc2-411', 40, 4, 'Lab', 'students');
+INSERT INTO `tb_room` (`room_id`, `number`, `max_occupancy`, `floor`, `typ_id`) VALUES
+(2207, 'Sc2-207', 40, 2, 1303),
+(2212, 'Sc2-212', 30, 2, 1301),
+(2301, 'Sc2-301', 4, 3, 1305),
+(2307, 'Sc2-307', 30, 3, 1304),
+(2411, 'Sc2-411', 40, 4, 1304);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_room_typ`
+--
+
+CREATE TABLE `tb_room_typ` (
+  `typ_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tb_room_typ`
+--
+
+INSERT INTO `tb_room_typ` (`typ_id`, `name`, `description`) VALUES
+(1301, 'Meet_slope', ''),
+(1302, 'Lecture', ''),
+(1303, 'Meet', ''),
+(1304, 'Lab', ''),
+(1305, 'Professor\'s Office', '');
 
 -- --------------------------------------------------------
 
@@ -186,7 +208,14 @@ ALTER TABLE `tb_position`
 -- Indexes for table `tb_room`
 --
 ALTER TABLE `tb_room`
-  ADD PRIMARY KEY (`room_id`);
+  ADD PRIMARY KEY (`room_id`),
+  ADD KEY `typ_id` (`typ_id`);
+
+--
+-- Indexes for table `tb_room_typ`
+--
+ALTER TABLE `tb_room_typ`
+  ADD PRIMARY KEY (`typ_id`);
 
 --
 -- Indexes for table `tb_user`
