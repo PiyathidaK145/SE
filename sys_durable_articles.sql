@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2025 at 08:42 AM
+-- Generation Time: Mar 26, 2025 at 11:20 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,8 +18,23 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sys_durable_articles`
+-- Database: `se`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_borrowing`
+--
+
+CREATE TABLE `tb_borrowing` (
+  `user_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `durable_articles_id` int(11) NOT NULL,
+  `status_of_use` enum('Borrowed','Free','Unavailable') NOT NULL,
+  `room_id` int(11) NOT NULL,
+  `time_borrow` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -76,7 +91,7 @@ INSERT INTO `tb_durable_articles` (`durable_articles_id`, `name`, `brand`, `seri
 
 CREATE TABLE `tb_member` (
   `member_id` int(11) NOT NULL,
-  `academic_ranks` varchar(255) DEFAULT NULL,
+  `academic_ranks` varchar(255) NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `gender` enum('female','male','LGBTQ+') NOT NULL,
@@ -94,7 +109,7 @@ INSERT INTO `tb_member` (`member_id`, `academic_ranks`, `first_name`, `last_name
 (1234567, 'อ.', 'วุฒิพงษ์', 'เรือนทอง', 'male', '0000-00-00', 1101, 0, 'wut030'),
 (1234568, 'ดร.', 'ไกรศักดิ์', 'เกษร', 'LGBTQ+', '0000-00-00', 1104, 0, 'kai030'),
 (1234569, 'ดร.', 'จันทร์จิรา', 'พยัคฆ์เพศ', 'female', '0000-00-00', 1103, 0, 'ji0300'),
-(1234570, '', 'ปทุมมา', 'แก้วแดง', 'female', '0000-00-00', 1102, 0, 'pathum0');
+(1234570, 'น.', 'ปทุมมา', 'แก้วแดง', 'female', '0000-00-00', 1102, 0, 'pathum0');
 
 -- --------------------------------------------------------
 
@@ -129,61 +144,33 @@ CREATE TABLE `tb_room` (
   `number` varchar(11) NOT NULL,
   `max_occupancy` int(11) NOT NULL,
   `floor` int(11) NOT NULL,
-  `typ_id` int(11) NOT NULL
+  `table_typ` enum('Slob','Lecture','Lab') NOT NULL,
+  `room_for` enum('students','teacher') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_room`
 --
 
-INSERT INTO `tb_room` (`room_id`, `number`, `max_occupancy`, `floor`, `typ_id`) VALUES
-(2207, 'Sc2-207', 40, 2, 1303),
-(2212, 'Sc2-212', 30, 2, 1301),
-(2301, 'Sc2-301', 4, 3, 1305),
-(2307, 'Sc2-307', 30, 3, 1304),
-(2411, 'Sc2-411', 40, 4, 1304);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tb_room_typ`
---
-
-CREATE TABLE `tb_room_typ` (
-  `typ_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tb_room_typ`
---
-
-INSERT INTO `tb_room_typ` (`typ_id`, `name`, `description`) VALUES
-(1301, 'Meet_slope', ''),
-(1302, 'Lecture', ''),
-(1303, 'Meet', ''),
-(1304, 'Lab', ''),
-(1305, 'Professor\'s Office', '');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tb_user`
---
-
-CREATE TABLE `tb_user` (
-  `user_id` int(11) NOT NULL,
-  `member_id` int(11) NOT NULL,
-  `durable_articles_id` int(11) NOT NULL,
-  `status_of_use` enum('Borrowed','Free','Unavailable') NOT NULL,
-  `room_id` int(11) NOT NULL,
-  `time_borrow` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `tb_room` (`room_id`, `number`, `max_occupancy`, `floor`, `table_typ`, `room_for`) VALUES
+(2207, 'Sc2-207', 40, 2, 'Lecture', 'students'),
+(2212, 'Sc2-212', 30, 2, 'Slob', 'students'),
+(2301, 'Sc2-301', 4, 3, 'Lecture', 'teacher'),
+(2307, 'Sc2-307', 30, 3, 'Lab', 'students'),
+(2411, 'Sc2-411', 40, 4, 'Lab', 'students');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `tb_borrowing`
+--
+ALTER TABLE `tb_borrowing`
+  ADD PRIMARY KEY (`user_id`),
+  ADD KEY `durable_articles_id` (`durable_articles_id`),
+  ADD KEY `room_id` (`room_id`),
+  ADD KEY `member_id` (`member_id`);
 
 --
 -- Indexes for table `tb_durable_articles`
@@ -208,27 +195,17 @@ ALTER TABLE `tb_position`
 -- Indexes for table `tb_room`
 --
 ALTER TABLE `tb_room`
-  ADD PRIMARY KEY (`room_id`),
-  ADD KEY `typ_id` (`typ_id`);
-
---
--- Indexes for table `tb_room_typ`
---
-ALTER TABLE `tb_room_typ`
-  ADD PRIMARY KEY (`typ_id`);
-
---
--- Indexes for table `tb_user`
---
-ALTER TABLE `tb_user`
-  ADD PRIMARY KEY (`user_id`),
-  ADD KEY `durable_articles_id` (`durable_articles_id`),
-  ADD KEY `room_id` (`room_id`),
-  ADD KEY `member_id` (`member_id`);
+  ADD PRIMARY KEY (`room_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `tb_borrowing`
+--
+ALTER TABLE `tb_borrowing`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tb_durable_articles`
@@ -237,28 +214,22 @@ ALTER TABLE `tb_durable_articles`
   MODIFY `durable_articles_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
--- AUTO_INCREMENT for table `tb_user`
---
-ALTER TABLE `tb_user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `tb_borrowing`
+--
+ALTER TABLE `tb_borrowing`
+  ADD CONSTRAINT `fk_du` FOREIGN KEY (`durable_articles_id`) REFERENCES `tb_durable_articles` (`durable_articles_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_member` FOREIGN KEY (`member_id`) REFERENCES `tb_member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_room` FOREIGN KEY (`room_id`) REFERENCES `tb_room` (`room_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tb_member`
 --
 ALTER TABLE `tb_member`
   ADD CONSTRAINT `fk_position` FOREIGN KEY (`position_id`) REFERENCES `tb_position` (`position_id`);
-
---
--- Constraints for table `tb_user`
---
-ALTER TABLE `tb_user`
-  ADD CONSTRAINT `fk_du` FOREIGN KEY (`durable_articles_id`) REFERENCES `tb_durable_articles` (`durable_articles_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_member` FOREIGN KEY (`member_id`) REFERENCES `tb_member` (`member_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_room` FOREIGN KEY (`room_id`) REFERENCES `tb_room` (`room_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
