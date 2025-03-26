@@ -21,7 +21,7 @@ $status_query = mysqli_query($conn, "
 <form method="GET" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
   
   <!-- ตำแหน่งห้อง -->
-  <select name="room" style="width: 200px; height: 40px">
+  <select name="room" >
     <option value="">ตำแหน่งปัจจุบัน</option>
     <?php while ($row = mysqli_fetch_assoc($room_query)): ?>
       <option value="<?= $row['number'] ?>" <?= ($_GET['room'] ?? '') == $row['number'] ? 'selected' : '' ?>>
@@ -31,7 +31,7 @@ $status_query = mysqli_query($conn, "
   </select>
 
   <!-- ปีที่ซื้อ -->
-  <select name="year" style="width: 200px; height: 40px">
+  <select name="year" >
     <option value="">ปีที่ซื้อ</option>
     <?php while ($row = mysqli_fetch_assoc($year_query)): ?>
       <option value="<?= $row['year_of_purchase'] ?>" <?= ($_GET['year'] ?? '') == $row['year_of_purchase'] ? 'selected' : '' ?>>
@@ -42,14 +42,14 @@ $status_query = mysqli_query($conn, "
 
   <!-- สถานะการใช้งาน -->
   <!-- สถานะการใช้งาน -->
-  <select name="status" style="width: 200px; height: 40px">
+  <select name="status" >
     <option value="">สถานะการใช้งาน</option>
     <option value="Borrowed" <?= ($_GET['status'] ?? '') == 'Borrowed' ? 'selected' : '' ?>>ถูกยืม</option>
     <option value="Free" <?= ($_GET['status'] ?? '') == 'Free' ? 'selected' : '' ?>>ว่าง</option>
     <option value="Unavailable" <?= ($_GET['status'] ?? '') == 'Unavailable' ? 'selected' : '' ?>>ไม่พร้อมใช้งาน</option>
   </select>
   <input type="text" name="search" placeholder="ค้นหาชื่อ, ยี่ห้อ, รุ่น..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" style="height: 40px; padding: 0 10px;" />
-  <button type="submit" style="width: 50px; height: 40px; background-color: white; border-radius: 10px; border: none; ">🔎</button>
+  <button type="submit">ค้นหา</button>
 </form>
 
 
