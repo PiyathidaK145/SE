@@ -49,7 +49,7 @@ $status_query = mysqli_query($conn, "
     <option value="Unavailable" <?= ($_GET['status'] ?? '') == 'Unavailable' ? 'selected' : '' ?>>ไม่พร้อมใช้งาน</option>
   </select>
   <input type="text" name="search" placeholder="ค้นหาชื่อ, ยี่ห้อ, รุ่น..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" style="height: 40px; padding: 0 10px;" />
-  <button type="submit" style="width: 50px;height: 40px; ">🔎</button>
+  <button type="submit" style="width: 50px; height: 40px; background-color: white; border-radius: 10px; border: none; ">🔎</button>
 </form>
 
 
