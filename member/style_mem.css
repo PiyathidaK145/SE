@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Prompt', sans-serif;
   }
   
   body {
@@ -12,52 +12,47 @@
     background-color: #f7f2f2;
   }
   
-  table {
+  .table table {
     width: 100%;
     border-collapse: collapse;
-    text-align: center;
-    margin-top: 40px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: white;
   }
   
-  /* มุมซ้ายบน */
-  table tr:first-child th:first-child {
-    border-top-left-radius: 12px;
-  }
-  
-  /* มุมขวาบน */
-  table tr:first-child th:last-child {
-    border-top-right-radius: 12px;
-  }
-  
-  /* มุมซ้ายล่าง */
-  table tr:last-child td:first-child {
-    border-bottom-left-radius: 12px;
-  }
-  
-  /* มุมขวาล่าง */
-  table tr:last-child td:last-child {
-    border-bottom-right-radius: 12px;
-  }
-  
-  th,
-  td {
-    /* border: 1px solid #000; */
-    padding: 8px;
-    background-color: #fff;
-  }
-  
-  th {
-    background-color: #999;
+  .table thead {
+    background-color: #ea9227; /* สีเทาหัวตาราง */
     color: white;
   }
   
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
+  .table thead th {
+    padding: 12px 10px;
+    text-align: center;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
-  td[colspan] {
-    font-weight: bold;
+  .table tbody tr {
+    border-bottom: 1px solid #ddd;
   }
+  
+  .table tbody td {
+    padding: 10px;
+    text-align: center;
+    color: #333;
+  }
+  
+  table tbody tr:hover {
+    background-color: #fdf1e7; /* สีส้มอ่อน */
+  }
+
+  .table thead th:nth-child(5),
+  .table thead th:nth-child(6) {
+    min-width: 160px; /* สำหรับคอลัมน์ หมายเลขครุภัณฑ์ และ หมายเลขเครื่อง */
+  }
+  
+    
   
   .sidebar {
     width: 250px;
@@ -69,13 +64,19 @@
   
   .logo {
     color: purple;
-    margin-bottom: 20px;
+    margin-bottom: 480px;
+    
+  }
+  .logo h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
   }
   
   .profile {
     display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+    align-items: center;  
+    margin-bottom: 10px;
   }
   
   .profile img {
@@ -87,7 +88,18 @@
   .profile h4 {
     margin-bottom: 4px;
   }
-  
+  .logout {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+    height: 25px;
+    justify-content: center;
+    border-radius: 10px;
+    background-color: #ffeee3;
+    border-color: #ea9227;
+  }
+
   .menu {
     list-style: none;
   }
@@ -112,14 +124,23 @@
   
   .topbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* จัดตรงกลางแนวนอน */
     align-items: center;
-    max-width: 2000px;
-    min-width: 1000px;
-    padding: 30px;
+    flex-wrap: wrap; /* ถ้ามีหลายชิ้นจะขึ้นบรรทัดใหม่ */
+    gap: 10px;
+    padding: 20px;
     border-radius: 15px;
     background-color: #ffeee3;
   }
+  
+  .topbar form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  
   
   .topbar select {
     padding: 5px;
@@ -142,60 +163,4 @@
     color: #777;
   }
   
-  .overview {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
-  }
   
-  .card {
-    flex: 1;
-    padding: 20px;
-    border-radius: 12px;
-    color: white;
-  }
-  
-  .sales {
-    background: linear-gradient(135deg, #f46b45, #eea849);
-  }
-  
-  .orders {
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-  }
-  
-  .visitors {
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-  }
-  
-  .card h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .card p {
-    font-size: 24px;
-    margin-bottom: 5px;
-  }
-  
-  .bottom {
-    display: flex;
-    gap: 20px;
-    margin-top: 30px;
-  }
-  
-  .chart,
-  .donut {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    flex: 1;
-  }
-  
-  .donut ul {
-    list-style: none;
-    margin-top: 10px;
-  }
-  
-  .donut li {
-    margin-bottom: 6px;
-  }
