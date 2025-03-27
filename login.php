@@ -38,7 +38,6 @@ include 'connect.php';
                     </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-center">
                         <button type="submit" class="btn btn-success ">เข้าสู่ระบบ</button>
-                        <a href="<?php echo $base_url . '/register.php'; ?>" class="btn btn-warning ">สมัครสมาชิก</a>
                     </div>
                 </form>
             </div>
