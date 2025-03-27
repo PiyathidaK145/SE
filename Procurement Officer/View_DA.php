@@ -100,7 +100,7 @@ $total_pages = ceil($total_rows / $items_per_page);
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="image/logo.jpg" alt="" style="width: 200px;">
+            <img src="../image/logo.jpg" alt="" style="width: 200px;">
         </div>
         <div class="profile">
             <img src="https://i.pravatar.cc/50?img=3" alt="Profile" />
