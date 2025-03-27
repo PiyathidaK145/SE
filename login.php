@@ -1,6 +1,7 @@
 <?php
 session_start();
-include dirname(__FILE__) . '/../connet/connect.php';
+include __DIR__ . '/connet/connect.php';
+
 
 ?>
 
