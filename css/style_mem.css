@@ -1,176 +1,185 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Prompt', sans-serif;
-  }
-  
-  body {
-    display: flex;
-    background: #f7f5fc;
-    color: #333;
-    background-color: #f7f2f2;
-  }
-  
-  .table table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: white;
-  }
-  
-  .table thead {
-    background-color: #ea9227; /* สีเทาหัวตาราง */
-    color: white;
-  }
-  
-  .table thead th {
-    padding: 12px 10px;
-    text-align: center;
-    white-space: nowrap; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .table tbody tr {
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .table tbody td {
-    padding: 10px;
-    text-align: center;
-    color: #333;
-    font-size: 15px;
-  }
-  
-  table tbody tr:hover {
-    background-color: #fdf1e7; /* สีส้มอ่อน */
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Prompt', sans-serif;
+}
 
-  .table thead th:nth-child(5),
-  .table thead th:nth-child(6) {
-    min-width: 160px; /* สำหรับคอลัมน์ หมายเลขครุภัณฑ์ และ หมายเลขเครื่อง */
-  }
-  
-    
-  
-  .sidebar {
-    width: 250px;
-    background-color: #fff;
-    border-right: 1px solid #eee;
-    padding: 20px;
-    height: 100vh;
-  }
-  
-  .logo {
-    color: purple;
-    margin-bottom: 20px;
-    
-  }
-  .logo h2 {
-    font-size: 1.5em;
-    font-weight: bold;
-    text-align: center;
-  }
-  
-  .profile {
-    display: flex;
-    align-items: center;  
-    margin-bottom: 5px;
-  }
-  
-  .profile img {
-    width: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-  
-  .profile h4 {
-    margin-bottom: 4px;
-  }
-  .logout {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 100%;
-    height: 25px;
-    justify-content: center;
-    border-radius: 10px;
-    background-color: #ffeee3;
-    border-color: #ea9227;
-  }
+/* ตั้งค่า body */
+body {
+  display: flex;
+  background: #f7f5fc;
+  color: #333;
+  background-color: #f7f2f2;
+}
 
-  .menu {
-    list-style: none;
-  }
-  
-  .menu li {
-    padding: 10px;
-    color: #777;
-    cursor: pointer;
-  }
-  
-  .menu li.active,
-  .menu li:hover {
-    background-color: #f0f0ff;
-    color: #5e35b1;
-    border-radius: 8px;
-  }
-  
-  .main {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  
-  .topbar {
-    display: flex;
-    justify-content: center; /* จัดตรงกลางแนวนอน */
-    align-items: center;
-    flex-wrap: wrap; /* ถ้ามีหลายชิ้นจะขึ้นบรรทัดใหม่ */
-    gap: 10px;
-    padding: 20px;
-    border-radius: 15px;
-    background-color: #ffeee3;
-  }
-  
-  .topbar form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  
-  .topbar select {
-    width: 230px;
-    height: 40px;
-    padding: 5px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-  }
-  
-  .topbar input {
-    width: 350px;
-    height: 40px;
-    padding: 5px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-  }
-  .topbar button {
-    height: 40px;
-    padding: 0 16px;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    font-size: 15px;
-  }
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  border-right: 1px solid #eee;
+  padding: 20px;
+  height: 100vh;
+  position: fixed; /* ทำให้ Sidebar คงที่ */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
 
-  
+/* โลโก้ */
+.logo {
+  color: purple;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.logo h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+/* โปรไฟล์ */
+.profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.profile img {
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.profile h4 {
+  margin-bottom: 4px;
+}
+
+/* เมนู */
+.sidebar .menu {
+  list-style: none;
+}
+
+.sidebar .menu li {
+  padding: 10px;
+  color: #777;
+  cursor: pointer;
+}
+
+.sidebar .menu li.active,
+.sidebar .menu li:hover {
+  background-color: #f0f0ff;
+  color: #5e35b1;
+  border-radius: 8px;
+}
+
+/* ปุ่ม Logout */
+.logout {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+  height: 40px;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: #ffeee3;
+  border-color: #ea9227;
+  border: 1px solid #ea9227;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* ตั้งค่าเนื้อหาหลักให้ชิดขวาของ Sidebar */
+.main {
+  flex-grow: 1;
+  padding: 20px;
+  margin-left: 260px; /* ชดเชยพื้นที่ให้ Sidebar */
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #ffeee3;
+}
+
+.topbar form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.topbar select,
+.topbar input {
+  width: 230px;
+  height: 40px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.topbar input {
+  width: 350px;
+}
+
+.topbar button {
+  height: 40px;
+  padding: 0 16px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* ตาราง */
+.table table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.table thead {
+  background-color: #ea9227;
+  color: white;
+}
+
+.table thead th {
+  padding: 12px 10px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.table tbody td {
+  padding: 10px;
+  text-align: center;
+  color: #333;
+  font-size: 15px;
+}
+
+.table tbody tr:hover {
+  background-color: #fdf1e7;
+}
+
+/* ปรับขนาดคอลัมน์เฉพาะ */
+.table thead th:nth-child(5),
+.table thead th:nth-child(6) {
+  min-width: 160px;
+}

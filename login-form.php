@@ -1,7 +1,5 @@
 <?php
-
-session_start();
-include 'connect.php';
+include dirname(__FILE__) . '/../connet/connect.php';
 
 $username = mysqli_real_escape_string($conn, $_POST['username']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
@@ -28,7 +26,7 @@ if (!empty($username) && !empty($password)) {
             exit();
         }
     }
-} 
+}
 
 // กรณีเข้าสู่ระบบไม่สำเร็จ
 $_SESSION['message'] = "ข้อมูลไม่ถูกต้อง";

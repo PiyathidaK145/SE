@@ -1,53 +1,43 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const labels = ['ใช้งานได้', 'ชำรุด', 'เสียหาย', 'จำหน่ายแล้ว'];
-    const colors = ['#4CAF50', '#FFC107', '#F44336', '#00BCD4'];
+// ตรวจสอบข้อมูลที่ได้จาก PHP
+console.log(chartData);
 
-    // Bar Chart
-    new Chart(document.getElementById('barChart'), {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'จำนวนครุภัณฑ์',
-                data: chartData,
-                backgroundColor: colors,
-                borderColor: '#333',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            aspectRatio: 2,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+// กราฟ Bar
+const ctxBar = document.getElementById('barChart').getContext('2d');
+new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+        labels: ["ใช้งานได้", "ชำรุด", "เสียหาย", "จำหน่ายแล้ว"], // ใส่ชื่อสถานะครุภัณฑ์
+        datasets: [{
+            label: 'จำนวนรายการ',
+            data: chartData, // ข้อมูลที่ได้รับจาก PHP
+            backgroundColor: ['#4caf50', '#f44336', '#ff9800', '#2196f3'], // สีพื้นหลัง
+            borderColor: ['#4caf50', '#f44336', '#ff9800', '#2196f3'], // สีขอบ
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
             }
         }
-    });
+    }
+});
 
-    // Pie Chart
-    new Chart(document.getElementById('pieChart'), {
-        type: 'pie',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: chartData,
-                backgroundColor: colors,
-                borderColor: '#fff',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            aspectRatio: 2,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
+// กราฟ Pie
+const ctxPie = document.getElementById('pieChart').getContext('2d');
+new Chart(ctxPie, {
+    type: 'pie',
+    data: {
+        labels: ["ใช้งานได้", "ชำรุด", "เสียหาย", "จำหน่ายแล้ว"], // ใส่ชื่อสถานะครุภัณฑ์
+        datasets: [{
+            label: 'จำนวนรายการ',
+            data: chartData, // ข้อมูลที่ได้รับจาก PHP
+            backgroundColor: ['#4caf50', '#f44336', '#ff9800', '#2196f3'], // สีพื้นหลัง
+        }]
+    },
+    options: {
+        responsive: true
+    }
 });
