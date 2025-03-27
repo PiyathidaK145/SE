@@ -32,10 +32,12 @@ if (!empty($_GET['status'])) {
     $status = mysqli_real_escape_string($conn, $_GET['status']);
 
     if ($status === 'Free') {
-        // กรณี Free ต้องรวมทั้ง status_of_use = 'Free' และ NULL
-        $where[] = "(b.status_of_use = 'Free' OR b.status_of_use IS NULL)";
-    } else {
-        $where[] = "b.status_of_use = '$status'";
+        // ✅ เพิ่มเงื่อนไขไม่เอา Broken หรือ Damaged
+        $where[] = "( (b.status_of_use = 'Free' OR b.status_of_use IS NULL) AND d.condition_of_use = 'Working' )";
+    } elseif ($status === 'Borrowed') {
+        $where[] = "b.status_of_use = 'Borrowed'";
+    } elseif ($status === 'Unavailable') {
+        $where[] = "(d.condition_of_use IN ('Broken', 'Damaged'))";
     }
 }
 
@@ -50,6 +52,7 @@ SELECT
     d.durable_articles_number,
     d.`serial number`,
     d.year_of_purchase,
+    d.condition_of_use,
     r.number, 
     b.status_of_use,
     b.time_borrow,
@@ -100,6 +103,7 @@ $result = mysqli_query($conn, $sql);
         </div>
         <ul class="menu">
             <button class="logout">logout</button>
+            <li class="active">ดูตำแหน่งครุภัณฑ์</li>
         </ul>
     </div>
 
@@ -127,7 +131,14 @@ $result = mysqli_query($conn, $sql);
                     <?php
                     $count = 1;
                     while ($row = mysqli_fetch_assoc($result)) {
-                        $status_display = $row['status_of_use'] === 'Borrowed' ? 'ถูกยืม' : 'ว่าง';
+                        if ($row['status_of_use'] === 'Borrowed') {
+                            $status_display = 'ถูกยืม';
+                        } elseif (in_array($row['condition_of_use'], ['Broken', 'Damaged'])) {
+                            $status_display = 'ไม่พร้อมใช้งาน';
+                        } elseif ($row['condition_of_use'] === 'Working') {
+                            $status_display = 'ว่าง';
+                        } 
+                        
                         $modalId = "modal_" . $row['durable_articles_id']; // สร้าง ID เฉพาะของ modal
                         $Date = empty($row['time_borrow']) ? '-' : ($row['time_borrow']);
                         $borrower = $row['academic_ranks'] . $row['first_name'] . " " . $row['last_name'];
