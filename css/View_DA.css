@@ -2,13 +2,17 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Prompt', sans-serif;
 }
 
 body {
+  /* display: flex;
+  background: #f7f5fc;
+  color: #333; */
   display: flex;
   background: #f7f5fc;
   color: #333;
+  background-color: #f7f2f2;
 }
 
 .sidebar {
@@ -60,27 +64,37 @@ body {
 .main {
   flex-grow: 1;
   padding: 20px;
+  margin-top: -17%;
 }
 
 table {
+  border-radius: 10px;
   width: 100%;
   border-collapse: collapse;
+  overflow: hidden;
+  background-color: white;
+  table-layout: fixed;
 }
 
 table,
 th,
 td {
-  border: 1px solid black;
+  background-color: white;
 }
 
 th,
 td {
-  padding: 8px;
-  text-align: left;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  padding: 12px 10px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 th {
-  background-color: #f2f2f2;
+  color: white;
+  background-color: #ea9227;
 }
 
 .content {
@@ -88,9 +102,8 @@ th {
   flex-wrap: wrap;
 }
 
-h2 {
-  display: flex;
-  margin-bottom: 20px;
+table,td:hover {
+  background-color: #fdf1e7; /* สีส้มอ่อน */
 }
 
 select {
@@ -101,29 +114,79 @@ select {
   margin-right: 10px;
 }
 
-.main {
+.topbar {
   display: flex;
-  justify-content: center;
-  flex-direction: column;
+  justify-content: center; /* จัดตรงกลางแนวนอน */
   align-items: center;
-  margin-top: -35rem;
+  flex-wrap: wrap; /* ถ้ามีหลายชิ้นจะขึ้นบรรทัดใหม่ */
+  gap: 10px;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #ffeee3;
 }
+
+.topbar form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.topbar select {
+  width: 230px;
+  height: 40px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.topbar input {
+  width: 350px;
+  height: 40px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+.topbar button {
+  height: 40px;
+  padding: 0 16px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
 
 .filters {
-  display: flex;
-  justify-content: space-between;
-  width: auto;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
+  display: flex; /* ใช้ flexbox เพื่อจัดวาง elements */
+  gap: 10px; /* ช่องว่างระหว่าง dropdown filters */
 }
 
+.filters select {
+  width: 200px; /* กำหนดความกว้างของ dropdown filter อย่างคงที่ */
+  padding: 5px; /* เพิ่ม padding ภายใน */
+  box-sizing: border-box; /* เพื่อให้ padding ถูกรวมอยู่ในความกว้างทั้งหมด */
+}
 
 .filters select,
 .search-bar input {
-  width: auto;
+  width: 100%;
   /* กำหนดให้ dropdown และ search bar ปรับความกว้างตามเนื้อหาหรือหน้าจอ */
   min-width: 150px;
   /* ตั้งค่าความกว้างขั้นต่ำ เพื่อไม่ให้ dropdown เล็กเกินไป */
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .header-row select,
@@ -143,21 +206,20 @@ select {
 .search-bar input {
   padding: 10px;
   width: 200px;
-  border-radius: 20px;
-  border: 2px solid #ccc;
+  border-radius: 10px;
+  border: px solid #ccc;
 }
 
 .search-bar button {
   padding: 6px 12px;
   margin-left: -5px;
   color: rgb(0, 0, 0);
-  border: 2px solid #5e35b1;
-  border-radius: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
   cursor: pointer;
-  margin-top: 19rem;
+  margin-top: 95%;
   width: 80px;
   height: 40px;
-  gap: 10px;
 }
 
 .search-bar button :hover {
@@ -183,6 +245,7 @@ a {
   text-decoration: none;
   color: #333;
 }
+
 
 @media (max-width: 768px) {
   .filters {
