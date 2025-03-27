@@ -93,27 +93,15 @@ $total_pages = ceil($total_rows / $items_per_page);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Purple Dashboard</title>
-    <link rel="stylesheet" href="../css/View_DA.css" />
+    <link rel="stylesheet" href="../css/View_DA.css?v=1.0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
-<style>
-    .search-bar button {
-        padding: 6px 12px;
-        margin-left: -5px;
-        color: rgb(0, 0, 0);
-        border: 2px solid #5e35b1;
-        border-radius: 20px;
-        cursor: pointer;
-        margin-top: 19rem;
-        width: 80px;
-        height: 40px;
-        gap: 10px;
-    }
-</style>
 
 <body>
     <div class="sidebar">
-        <h2 class="logo">Menu</h2>
+        <div class="logo">
+            <img src="../image/logo.jpg" alt="" style="width: 200px;">
+        </div>
         <div class="profile">
             <img src="https://i.pravatar.cc/50?img=3" alt="Profile" />
             <div>
@@ -129,61 +117,63 @@ $total_pages = ceil($total_rows / $items_per_page);
     </div>
 
     <div class="main">
-        <form method="GET" action="">
-            <div class="filters">
-                <div class="header-row">
-                    <!-- Dropdown ฟิลเตอร์ตำแหน่งปัจจุบัน -->
-                    <select name="room" onchange="this.form.submit()">
-                        <option selected disabled hidden>ตำแหน่งปัจจุบัน</option>
-                        <?php
-                        if (mysqli_num_rows($room_result) > 0) {
-                            while ($row = mysqli_fetch_assoc($room_result)) {
-                                $selected = ($row['number'] == $selected_room) ? 'selected' : '';
-                                echo "<option value='" . $row['number'] . "' $selected>" . $row['number'] . "</option>";
+        <div class="topbar">
+            <form method="GET" action="">
+                <div class="filters">
+                    <div class="header-row">
+                        <!-- Dropdown ฟิลเตอร์ตำแหน่งปัจจุบัน -->
+                        <select name="room" onchange="this.form.submit()">
+                            <option selected disabled hidden>ตำแหน่งปัจจุบัน</option>
+                            <?php
+                            if (mysqli_num_rows($room_result) > 0) {
+                                while ($row = mysqli_fetch_assoc($room_result)) {
+                                    $selected = ($row['number'] == $selected_room) ? 'selected' : '';
+                                    echo "<option value='" . $row['number'] . "' $selected>" . $row['number'] . "</option>";
+                                }
                             }
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
 
-                    <!-- Dropdown ฟิลเตอร์ปีที่ซื้อ -->
-                    <select name="year_of_purchase" onchange="this.form.submit()">
-                        <option selected disabled hidden>ปีที่ซื้อ</option>
-                        <?php
-                        if (mysqli_num_rows($year_result) > 0) {
-                            while ($row = mysqli_fetch_assoc($year_result)) {
-                                $selected = ($row['year_of_purchase'] == $selected_year) ? 'selected' : '';
-                                echo "<option value='" . $row['year_of_purchase'] . "' $selected>" . $row['year_of_purchase'] . "</option>";
+                        <!-- Dropdown ฟิลเตอร์ปีที่ซื้อ -->
+                        <select name="year_of_purchase" onchange="this.form.submit()">
+                            <option selected disabled hidden>ปีที่ซื้อ</option>
+                            <?php
+                            if (mysqli_num_rows($year_result) > 0) {
+                                while ($row = mysqli_fetch_assoc($year_result)) {
+                                    $selected = ($row['year_of_purchase'] == $selected_year) ? 'selected' : '';
+                                    echo "<option value='" . $row['year_of_purchase'] . "' $selected>" . $row['year_of_purchase'] . "</option>";
+                                }
                             }
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
 
-                    <!-- Dropdown ฟิลเตอร์สถานะการใช้งาน -->
-                    <select name="status_of_use" onchange="this.form.submit()">
-                        <option selected disabled hidden>สถานะการใช้งาน</option>
-                        <?php
-                        if (mysqli_num_rows($status_result) > 0) {
-                            while ($row = mysqli_fetch_assoc($status_result)) {
-                                $status_display = ($row['status_of_use'] == 'Borrowed') ? 'ถูกยืม' : 'ว่าง';
-                                $selected = ($row['status_of_use'] == $selected_status) ? 'selected' : '';
-                                echo "<option value='" . $row['status_of_use'] . "' $selected>" . $status_display . "</option>";
+                        <!-- Dropdown ฟิลเตอร์สถานะการใช้งาน -->
+                        <select name="status_of_use" onchange="this.form.submit()">
+                            <option selected disabled hidden>สถานะการใช้งาน</option>
+                            <?php
+                            if (mysqli_num_rows($status_result) > 0) {
+                                while ($row = mysqli_fetch_assoc($status_result)) {
+                                    $status_display = ($row['status_of_use'] == 'Borrowed') ? 'ถูกยืม' : 'ว่าง';
+                                    $selected = ($row['status_of_use'] == $selected_status) ? 'selected' : '';
+                                    echo "<option value='" . $row['status_of_use'] . "' $selected>" . $status_display . "</option>";
+                                }
                             }
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
+
+                        <div class="search-bar">
+                            <!-- ฟิลด์ค้นหาครุภัณฑ์ -->
+                            <input type="text" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" placeholder="ค้นหาชื่อ,หมายเลขครุภัณฑ์...">
+                            <button type="submit">ค้นหา</button>
+                            <!-- <button><a href="View_DA.php">Reset</a></button> -->
+                        </div>
+                    </div>
+
+
                 </div>
-
-                <div class="search-bar">
-                    <!-- ฟิลด์ค้นหาครุภัณฑ์ -->
-                    <input type="text" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" placeholder="ค้นหาครุภัณฑ์ หมายเลขครุภัณฑ์...">
-                    <button type="submit">ค้นหา</button>
-                    <!-- <button><a href="View_DA.php">Reset</a></button> -->
-                </div>
-            </div>
-        </form>
-
+            </form>
+        </div>
         <div class="content">
-            <h2>ดูตำแหน่งครุภัณฑ์</h2>
             <table>
                 <thead>
                     <tr>

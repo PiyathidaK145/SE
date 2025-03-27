@@ -1,8 +1,8 @@
 <?php
     $servername = "localhost";
     $username = "root";
-    $password = "123456";
-    $dbname = "sys_durable_articles";
+    $password = "1234";
+    $dbname = "se";
 
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $dbname);
