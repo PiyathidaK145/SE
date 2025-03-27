@@ -27,6 +27,13 @@ $conn->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            width: 80%;
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -45,59 +52,16 @@ $conn->close();
         </ul>
     </div>
         <h2>แดชบอร์ดครุภัณฑ์</h2>
-        <canvas id="barChart"></canvas>
-        <canvas id="pieChart"></canvas>
-
+        <div class="chart-container">
+            <canvas id="barChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="pieChart"></canvas>
+        </div>
         <script>
-            const data = <?php echo json_encode(array_values($data)); ?>;
-            const labels = ['ใช้งานได้', 'ชำรุด', 'เสียหาย', 'จำหน่ายแล้ว'];
-            const colors = ['#4CAF50', '#FFC107', '#F44336', '#00BCD4'];
-
-            // Bar Chart
-            new Chart(document.getElementById('barChart'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'จำนวนครุภัณฑ์',
-                        data: data,
-                        backgroundColor: colors,
-                        borderColor: '#333',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            // Pie Chart
-            new Chart(document.getElementById('pieChart'), {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: colors,
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
+            const chartData = <?php echo json_encode(array_values($data)); ?>;
         </script>
+        <script src="../js/dashboardCharts.js"></script>
     </div>
 </body>
 </html>
