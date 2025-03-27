@@ -14,7 +14,7 @@ $yearResult = $conn->query($yearQuery);
 while ($row = $yearResult->fetch_assoc()) {
     $years[] = $row['year'];
 }
-$selectedYear = $_GET['year'] ?? ($years[0] ?? date('Y')); 
+$selectedYear = $_GET['year'] ?? ($years[0] ?? date('Y'));
 
 // ดึง `condition_of_use` ที่มีทั้งหมด
 $conditions = ["Working" => 0, "Broken" => 0, "Damaged" => 0, "Sold" => 0];
@@ -44,11 +44,18 @@ if ($result->num_rows > 0) {
         }
     }
 }
+// ดึงข้อมูลสำหรับแสดงในตาราง
+$sql = "SELECT * FROM tb_durable_articles WHERE year_of_purchase = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $selectedYear);
+$stmt->execute();
+$result = $stmt->get_result();
 $conn->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -117,17 +124,19 @@ $conn->close();
         <div class="logo"><img src="../image/logo.jpg" alt="Company Logo" style="width: 200px;"></div>
         <div class="profile">
             <img src="https://i.pravatar.cc/50?img=3" alt="Profile Picture" title="David Grey. H" />
-            <div><h4>David Grey. H</h4><span>Project Manager</span></div>
+            <div>
+                <h4>David Grey. H</h4><span>Project Manager</span>
+            </div>
         </div>
         <ul class="menu">
             <button class="logout">Logout</button>
             <li class="active">Dashboard</li>
-            <li >ดูตำแหน่งครุภัณฑ์</li>
+            <li>ดูตำแหน่งครุภัณฑ์</li>
         </ul>
     </aside>
 
     <div class="main">
-    <section class="data-summary">
+        <section class="data-summary">
             <div class="data-card working">
                 <h3>ใช้งานได้</h3>
                 <p><?php echo $data["Working"]; ?> รายการ</p>
@@ -159,68 +168,103 @@ $conn->close();
             <div class="chart-box"><canvas id="barChart"></canvas></div>
             <div class="chart-box"><canvas id="pieChart"></canvas></div>
         </section>
-    </div>
 
-    <script>
-        document.getElementById("year").addEventListener("change", function () {
-    window.location.href = "?year=" + this.value;
-});
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ลำดับ </th>
+                        <th>ชื่อ</th>
+                        <th>ยี่ห้อ</th>
+                        <th>รุ่น</th>
+                        <th>หมายเลขครุภัณฑ์</th>
+                        <th>หมายเลขเครื่อง</th>
+                        <th>ปีที่ซื้อ</th>
+                        <th>สภาพการใช้งาน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $count = 1;
+                    while ($row = $result->fetch_assoc()) { ?>
+                        <tr>
+                            <td><?= $count++ ?></td>
+                            <td><?= $row['name'] ?></td>
+                            <td><?= $row['brand'] ?></td>
+                            <td><?= $row['series'] ?></td>
+                            <td><?= $row['durable_articles_number'] ?></td>
+                            <td><?= $row['serial_number'] ?></td>
+                            <td><?= $row['year_of_purchase'] ?></td>
+                            <td><?= $row['condition_of_use'] ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+        </div>
 
-const chartData = <?php echo json_encode(array_values($conditions)); ?>;
-const labels = ["ใช้งานได้", "ชำรุด", "เสียหาย", "จำหน่ายแล้ว"];
-const colors = ['#4caf50', '#f44336', '#ff9800', '#2196f3'];
+        <script>
+            document.getElementById("year").addEventListener("change", function() {
+                window.location.href = "?year=" + this.value;
+            });
 
-// Bar Chart
-const ctxBar = document.getElementById('barChart').getContext('2d');
-new Chart(ctxBar, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [{
-            data: chartData,
-            backgroundColor: colors,
-            borderColor: colors,
-            borderWidth: 1,
-            borderRadius: 5, // ทำให้แท่งมีมุมโค้ง
-            barThickness: 40  // ปรับขนาดแท่งให้พอดี
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: { 
-            y: { beginAtZero: true } 
-        },
-        plugins: {
-            legend: { display: false } // ไม่แสดง label ใน bar chart
-        }
-    }
-});
+            const chartData = <?php echo json_encode(array_values($conditions)); ?>;
+            const labels = ["ใช้งานได้", "ชำรุด", "เสียหาย", "จำหน่ายแล้ว"];
+            const colors = ['#4caf50', '#f44336', '#ff9800', '#2196f3'];
 
-// Pie Chart
-const ctxPie = document.getElementById('pieChart').getContext('2d');
-new Chart(ctxPie, {
-    type: 'pie',
-    data: {
-        labels: labels,
-        datasets: [{
-            data: chartData,
-            backgroundColor: colors
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'bottom', // เลื่อน labels ไปอยู่ด้านล่าง
-                labels: {
-                    usePointStyle: true, // ให้ labels เป็นจุดแทนสี่เหลี่ยม
-                    pointStyle: 'circle' // ใช้จุดเป็นวงกลม
+            // Bar Chart
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        borderWidth: 1,
+                        borderRadius: 5, // ทำให้แท่งมีมุมโค้ง
+                        barThickness: 40 // ปรับขนาดแท่งให้พอดี
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        } // ไม่แสดง label ใน bar chart
+                    }
                 }
-            }
-        }
-    }
-});
+            });
 
-    </script>
+            // Pie Chart
+            const ctxPie = document.getElementById('pieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: colors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom', // เลื่อน labels ไปอยู่ด้านล่าง
+                            labels: {
+                                usePointStyle: true, // ให้ labels เป็นจุดแทนสี่เหลี่ยม
+                                pointStyle: 'circle' // ใช้จุดเป็นวงกลม
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
 </body>
+
 </html>
