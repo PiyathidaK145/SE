@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 26, 2025 at 03:16 PM
+-- Generation Time: Mar 27, 2025 at 07:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -60,7 +60,7 @@ CREATE TABLE `tb_durable_articles` (
   `brand` varchar(255) NOT NULL,
   `series` varchar(255) NOT NULL,
   `durable_articles_number` varchar(255) DEFAULT NULL,
-  `serial number` varchar(255) NOT NULL,
+  `serial_number` varchar(255) NOT NULL,
   `condition_of_use` enum('Working','Broken','Damaged','Sold') NOT NULL,
   `price` int(11) NOT NULL,
   `year_of_purchase` int(11) NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE `tb_durable_articles` (
 -- Dumping data for table `tb_durable_articles`
 --
 
-INSERT INTO `tb_durable_articles` (`durable_articles_id`, `name`, `brand`, `series`, `durable_articles_number`, `serial number`, `condition_of_use`, `price`, `year_of_purchase`, `annual_warranty`, `description`, `note`) VALUES
+INSERT INTO `tb_durable_articles` (`durable_articles_id`, `name`, `brand`, `series`, `durable_articles_number`, `serial_number`, `condition_of_use`, `price`, `year_of_purchase`, `annual_warranty`, `description`, `note`) VALUES
 (145001, 'CPU พร้อม DVD-RW ยี่ห้อ ไม่มี รุ่น CB 31005 S/N ไม่มี', 'HP', ' Pro Tower 280 G9', '7450-010-15778', '4CE430B6MP', 'Working', 16350, 2567, 3, 'จอภาพ ขนาด 21.5 นิ้ว		7450-010-15778(1)		  4,500 	HP	P22 G5	CNC4280LK9', ''),
 (145002, 'CPU พร้อม DVD-RW ยี่ห้อ ไม่มี รุ่น CB 31005 S/N ไม่มี', 'HP', ' Pro Tower 280 G9', '7450-010-15779', '4CE430B6MZ', 'Broken', 16350, 2567, 3, 'จอภาพ ขนาด 21.5 นิ้ว		7450-010-15779(1)		  4,500 	HP	P22 G5	CNC4290RN0', ''),
 (145003, 'CPU พร้อม DVD-RW ยี่ห้อ ไม่มี รุ่น CB 31005 S/N ไม่มี', 'HP', ' Pro Tower 280 G9', '7450-010-15780', '4CE430BKTT', 'Damaged', 16350, 2567, 3, 'จอภาพ ขนาด 21.5 นิ้ว		7450-010-15780(1)		  4,500 	HP	P22 G5	CNC4290RLS', ''),
@@ -109,7 +109,7 @@ CREATE TABLE `tb_member` (
   `gender` enum('female','male','LGBTQ+') NOT NULL,
   `date_of_birth` date NOT NULL,
   `position_id` int(11) NOT NULL,
-  `phone_number` int(11) NOT NULL,
+  `phone_number` varchar(15) NOT NULL,
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -118,10 +118,10 @@ CREATE TABLE `tb_member` (
 --
 
 INSERT INTO `tb_member` (`member_id`, `academic_ranks`, `first_name`, `last_name`, `gender`, `date_of_birth`, `position_id`, `phone_number`, `password`) VALUES
-(1234567, 'อ.', 'วุฒิพงษ์', 'เรือนทอง', 'male', '0000-00-00', 1101, 0, 'wut030'),
-(1234568, 'ดร.', 'ไกรศักดิ์', 'เกษร', 'LGBTQ+', '0000-00-00', 1104, 0, 'kai030'),
-(1234569, 'ดร.', 'จันทร์จิรา', 'พยัคฆ์เพศ', 'female', '0000-00-00', 1103, 0, 'ji0300'),
-(1234570, '', 'ปทุมมา', 'แก้วแดง', 'female', '0000-00-00', 1102, 0, 'pathum0');
+(1234567, 'อ.', 'วุฒิพงษ์', 'เรือนทอง', 'male', '0000-00-00', 1101, '090-0000000', 'wut030'),
+(1234568, 'ดร.', 'ไกรศักดิ์', 'เกษร', 'LGBTQ+', '0000-00-00', 1104, '000-0000000', 'kai030'),
+(1234569, 'ดร.', 'จันทร์จิรา', 'พยัคฆ์เพศ', 'female', '0000-00-00', 1103, '000-0000000', 'ji0300'),
+(1234570, '', 'ปทุมมา', 'แก้วแดง', 'female', '0000-00-00', 1102, '000-0000000', 'pathum0');
 
 -- --------------------------------------------------------
 
