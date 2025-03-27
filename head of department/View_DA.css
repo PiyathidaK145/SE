@@ -1,0 +1,192 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  display: flex;
+  background: #f7f5fc;
+  color: #333;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  border-right: 1px solid #eee;
+  padding: 20px;
+  height: 100vh;
+}
+
+.logo {
+  color: purple;
+  margin-bottom: 20px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile img {
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.profile h4 {
+  margin-bottom: 4px;
+}
+
+.menu {
+  list-style: none;
+}
+
+.menu li {
+  padding: 10px;
+  color: #777;
+  cursor: pointer;
+}
+
+.menu li.active,
+.menu li:hover {
+  background-color: #f0f0ff;
+  color: #5e35b1;
+  border-radius: 8px;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+h2 {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+select {
+  width: 20%;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -35rem;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  width: auto;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+
+.filters select,
+.search-bar input {
+  width: auto;
+  /* กำหนดให้ dropdown และ search bar ปรับความกว้างตามเนื้อหาหรือหน้าจอ */
+  min-width: 150px;
+  /* ตั้งค่าความกว้างขั้นต่ำ เพื่อไม่ให้ dropdown เล็กเกินไป */
+}
+
+.header-row select,
+.search-bar input {
+  margin: 20px;
+  padding: 10px;
+  width: 200px;
+  margin-top: 20rem;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+}
+
+
+.search-bar input {
+  padding: 10px;
+  width: 200px;
+  border-radius: 20px;
+  border: 2px solid #ccc;
+}
+
+.search-bar button {
+  padding: 6px 12px;
+  margin-left: -5px;
+  color: rgb(0, 0, 0);
+  border: 2px solid #5e35b1;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 19rem;
+  width: 80px;
+  height: 40px;
+  gap: 10px;
+}
+
+.search-bar button :hover {
+  padding: 6px 12px;
+  margin-left: -5px;
+  background-color:#ab8bec;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 19rem;
+  width: 80px;
+  height: 40px;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
