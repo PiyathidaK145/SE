@@ -1,5 +1,8 @@
 <?php
-include 'connet.php';
+
+include dirname(__FILE__) . '/../connet/connect.php';
+
+
 
 $search = $_GET['search'] ?? '';
 $where = [];
@@ -77,7 +80,7 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Purple Dashboard</title>
-    <link rel="stylesheet" href="style_mem.css" />
+    <link rel="stylesheet" href="../css/style_mem.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
 </head>
