@@ -104,17 +104,17 @@ $status_display = "";
         <div class="profile">
             <div>
                 <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>บุคลากรในภาควิชา</span>
+                <a class= "logout" href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
             </div>
         </div>
         <ul class="menu">
             <li class="active">ดูตำแหน่งครุภัณฑ์</li> <br>
-            <a href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
         </ul>
     </div>
 
     <div class="main">
         <div class="topbar">
-            <?php include 'flutter.php'; ?>
+            <?php include 'filter.php'; ?>
         </div>
 
         <div class="table">

@@ -189,12 +189,12 @@ $result = mysqli_query($conn, $sql);
         <div class="profile">
             <div>
                 <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>นักวิชาการพัสดุ</span>
+                <a class= "logout" href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
             </div>  
         </div>
         <ul class="menu">
             <li onclick="window.location.href='asset-table.php'">ดูตำแหน่งครุภัณฑ์</li>
             <li class="active">รายละเอียดครุภัณฑ์</li>
-            <a href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
         </ul>
     </div>
 

@@ -2,9 +2,9 @@
 date_default_timezone_set('Asia/Bangkok');
     $servername = "localhost";
     $username = "root";
-    $password = "";
+    $password = "123456";
     $dbname = "sys_durable_articles";
-    $base_url = "http://localhost/SE-main/";
+    $base_url = "http://localhost:8081/SE";
 
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $dbname);

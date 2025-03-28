@@ -122,17 +122,18 @@ $total_pages = ceil($total_rows / $items_per_page);
 </head>
 
 <body>
-    <aside class="sidebar">
+<aside class="sidebar">
         <div class="logo"><img src="../image/logo.jpg" alt="Company Logo" style="width: 200px;"></div>
         <div class="profile">
             <div>
                 <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>หัวหน้าภาควิชา</span>
+                <a class= "logout" href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
             </div>
         </div>
         <ul class="menu">
-            <li onclick="window.location.href='Hod_dashboard.php'">Dashboard</li>
-            <li class="active">ดูตำแหน่งครุภัณฑ์</li> <br>
-            <a href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
+            <li class="active" onclick="window.location.href='Hod_dashboard.php'">Dashboard</li>
+            <li onclick="window.location.href='View_DA.php'">ดูตำแหน่งครุภัณฑ์</li> <br>
+            
         </ul>
     </aside>
 
