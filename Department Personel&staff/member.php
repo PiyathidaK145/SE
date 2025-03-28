@@ -1,6 +1,15 @@
 <?php
 
+session_start();
 include dirname(__FILE__) . '/../connet/connect.php';
+if(empty($_SESSION[WP . 'checklogin'])){
+    $_SESSION['message']  = "ยังไม่ได้เข้าสู่ระบบ";
+    header("Location: {$base_url}/login.php");
+}
+
+$member_id= $_SESSION[WP . 'member_id'];
+$query = mysqli_query($conn, "SELECT * FROM tb_member WHERE member_id = '{$member_id}'") or die('query failed');
+$user = mysqli_fetch_assoc($query);
 
 $search = $_GET['search'] ?? '';
 $where = [];
@@ -17,28 +26,25 @@ if (!empty($search)) {
         )
     ";
 }
-//ตำแหน่งห้อง
 if (!empty($_GET['room'])) {
     $room = mysqli_real_escape_string($conn, $_GET['room']);
     $where[] = "r.number = '$room'";
 }
 
-//ปีที่ซื้อ
 if (!empty($_GET['year'])) {
     $year = mysqli_real_escape_string($conn, $_GET['year']);
     $where[] = "d.year_of_purchase = '$year'";
 }
-
-//สถานะการใช้งาน
 if (!empty($_GET['status'])) {
     $status = mysqli_real_escape_string($conn, $_GET['status']);
 
     if ($status === 'Free') {
+        // ✅ เพิ่มเงื่อนไขไม่เอา Broken หรือ Damaged
         $where[] = "( (b.status_of_use = 'Free' OR b.status_of_use IS NULL) AND d.condition_of_use = 'Working' )";
     } elseif ($status === 'Borrowed') {
         $where[] = "b.status_of_use = 'Borrowed'";
     } elseif ($status === 'Unavailable') {
-        $where[] = "(d.condition_of_use IN ('Broken', 'Damaged', 'Sold'))";
+        $where[] = "(d.condition_of_use IN ('Broken', 'Damaged'))";
     }
 }
 
@@ -83,7 +89,7 @@ $status_display = "";
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ดูตำแหน่งครุภัณฑ์</title>
+    <title>Purple Dashboard</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
@@ -96,21 +102,19 @@ $status_display = "";
         </div>
 
         <div class="profile">
-            <img src="https://i.pravatar.cc/50?img=3" alt="Profile" />
             <div>
-                <h4>David Grey. H</h4>
-                <span>Project Manager</span>
+                <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>บุคลากรในภาควิชา</span>
             </div>
         </div>
         <ul class="menu">
-            <button class="logout">logout</button>
-            <li class="active">ดูตำแหน่งครุภัณฑ์</li>
+            <li class="active">ดูตำแหน่งครุภัณฑ์</li> <br>
+            <a href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
         </ul>
     </div>
 
     <div class="main">
         <div class="topbar">
-            <?php include 'filter.php'; ?>
+            <?php include 'flutter.php'; ?>
         </div>
 
         <div class="table">
@@ -135,13 +139,11 @@ $status_display = "";
                     while ($row = mysqli_fetch_assoc($result)) {
                         if ($row['status_of_use'] === 'Borrowed') {
                             $status_display = 'ถูกยืม';
-                          } elseif (in_array($row['condition_of_use'], ['Broken', 'Damaged', 'Sold'])) {
+                        } elseif (in_array($row['condition_of_use'], ['Broken', 'Damaged'])) {
                             $status_display = 'ไม่พร้อมใช้งาน';
-                          } elseif ($row['condition_of_use'] === 'Working' and $row['status_of_use'] === 'Free') {
+                        } elseif ($row['condition_of_use'] === 'Working') {
                             $status_display = 'ว่าง';
-                          } else {
-                            $status_display = 'ว่าง';
-                          }
+                        }
 
                         $modalId = "modal_" . $row['durable_articles_id']; // สร้าง ID เฉพาะของ modal
                         $Date = empty($row['time_borrow']) ? '-' : ($row['time_borrow']);
@@ -158,23 +160,20 @@ $status_display = "";
                         echo "<td>" . $row['year_of_purchase'] . "</td>";
 
                         if ($row['status_of_use'] === 'Borrowed') {
-                            echo "<td style='color: red; cursor: pointer; text-decoration: underline;' onclick=\"document.getElementById('$modalId').style.display='block'\">" . $status_display . "</td>";
-                          } elseif (in_array($row['condition_of_use'], ['Broken', 'Damaged', 'Sold'])) {
+                            echo "<td style='color: purple; cursor: pointer;' onclick=\"document.getElementById('$modalId').style.display='block'\">" . $status_display . "</td>";
+                        } else {
                             echo "<td style='color: #aaa; cursor: default;'>" . $status_display . "</td>";
-                          } elseif ($row['condition_of_use'] === 'Working' and $row['status_of_use'] === 'Free') {
-                            echo "<td style='color: green; cursor: pointer; text-decoration: underline;'>" . $status_display . "</td>";
-                          } else {
-                            echo "<td style='color: green; cursor: pointer; text-decoration: underline;'>" . $status_display . "</td>";
-                          }
+                        }
 
                         echo "</tr>";
 
+                        // ✅ Modal แสดงนอกแถว แต่ภายในลูป
                         if ($row['status_of_use'] === 'Borrowed') {
                             echo "
                             <div id='$modalId' style='display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5)'>
                               <div style='background-color:white; margin:15% auto; padding:20px; width:350px; border-radius:10px;'>
                                 <span style='float:right; cursor:pointer;' onclick=\"document.getElementById('$modalId').style.display='none'\">&times;</span>
-                                <h3>รายละเอียดการยืม</h3>
+                                <h3>📄 รายละเอียดการยืม</h3>
                                 <p></p>
                                 <p>👨‍🦱 ผู้ยืม : $borrower</p>
                                 <p>⏰ วัน/เวลาที่ยืม : $Date</p>

@@ -1,6 +1,15 @@
 <?php
 
+session_start();
 include dirname(__FILE__) . '/../connet/connect.php';
+if(empty($_SESSION[WP . 'checklogin'])){
+    $_SESSION['message']  = "ยังไม่ได้เข้าสู่ระบบ";
+    header("Location: {$base_url}/login.php");
+}
+
+$member_id= $_SESSION[WP . 'member_id'];
+$query = mysqli_query($conn, "SELECT * FROM tb_member WHERE member_id = '{$member_id}'") or die('query failed');
+$user = mysqli_fetch_assoc($query);
 
 // ดึงตำแหน่งทั้งหมดจาก tb_room
 $room_sql = "SELECT DISTINCT number FROM tb_room ORDER BY number";
@@ -105,29 +114,27 @@ $total_pages = ceil($total_rows / $items_per_page);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ดูตำแหน่งครุภัณฑ์</title>
-    <link rel="stylesheet" href="../css/View_DA.css" />
+    <!-- <link rel="stylesheet" href="../css/View_DA.css" /> -->
+    <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+    
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="logo">
-            <img src="image/logo.jpg" alt="" style="width: 200px;">
-            <div class="profile">
-                <img src="https://i.pravatar.cc/50?img=3" alt="Profile" />
-                <div>
-                    <h4>David Grey. H</h4>
-                    <span>Project Manager</span>
-                </div>
+    <aside class="sidebar">
+        <div class="logo"><img src="../image/logo.jpg" alt="Company Logo" style="width: 200px;"></div>
+        <div class="profile">
+            <div>
+                <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>หัวหน้าภาควิชา</span>
             </div>
-            <ul class="menu">
-                <li>หน้าหลัก</li>
-                <li class="active">ดูตำแหน่งครุภัณฑ์</li>
-                <li>รายละเอียดครุภัณฑ์</li>
-            </ul>
         </div>
-    </div>
+        <ul class="menu">
+            <li onclick="window.location.href='Hod_dashboard.php'">Dashboard</li>
+            <li class="active">ดูตำแหน่งครุภัณฑ์</li> <br>
+            <a href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
+        </ul>
+    </aside>
 
     <div class="main">
         <div class="topbar">
