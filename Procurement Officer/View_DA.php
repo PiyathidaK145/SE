@@ -1,6 +1,6 @@
 <?php
 
-include('dbconnect.php');
+include dirname(__FILE__) . '/../connet/connect.php';
 
 
 // ดึงตำแหน่งทั้งหมดจาก tb_room
