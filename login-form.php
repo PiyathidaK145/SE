@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-include 'connect.php';
+include dirname(__FILE__) . '/../connet/connect.php';
 
 $username = mysqli_real_escape_string($conn, $_POST['username']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);

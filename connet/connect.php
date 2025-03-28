@@ -1,8 +1,8 @@
 <?php
     $servername = "localhost";
     $username = "root";
-    $password = "1234";
-    $dbname = "se";
+    $password = "123456";
+    $dbname = "sys_durable_articles";
 
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -12,4 +12,6 @@
         die("Connection failed: " . mysqli_connect_error());
     }
     //echo "Connected successfully";
+    define('WP', 'se2025');
+
 ?>
