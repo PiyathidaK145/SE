@@ -4,7 +4,7 @@ date_default_timezone_set('Asia/Bangkok');
     $username = "root";
     $password = "123456";
     $dbname = "sys_durable_articles";
-    $base_url = "http://localhost:8081/SE";
+    $base_url = "http://localhost:80/SE";
 
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $dbname);
