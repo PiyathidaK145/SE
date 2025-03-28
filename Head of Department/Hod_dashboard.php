@@ -3,10 +3,18 @@ include dirname(__FILE__) . '/../connet/connect.php';
 
 $conn->set_charset("utf8");
 
+// เช็คการเชื่อมต่อฐานข้อมูล
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 // ดึงปีทั้งหมดจากฐานข้อมูล
 $years = [];
 $yearQuery = "SELECT DISTINCT year_of_purchase as year FROM tb_durable_articles ORDER BY year DESC";
 $yearResult = $conn->query($yearQuery);
+if (!$yearResult) {
+    die("Error fetching years: " . $conn->error);
+}
 while ($row = $yearResult->fetch_assoc()) {
     $years[] = $row['year'];
 }
@@ -25,6 +33,9 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $startYear, $endYear);
 $stmt->execute();
 $result = $stmt->get_result();
+if (!$result) {
+    die("Error fetching conditions: " . $stmt->error);
+}
 while ($row = $result->fetch_assoc()) {
     if (isset($conditions[$row["condition_of_use"]])) {
         $conditions[$row["condition_of_use"]] = (int) $row["count"];
@@ -43,6 +54,9 @@ if ($selectedCondition) {
 }
 $stmt->execute();
 $articleResult = $stmt->get_result();
+if (!$articleResult) {
+    die("Error fetching articles: " . $stmt->error);
+}
 
 $yearsDiff = $endYear - $startYear;
 
@@ -56,152 +70,12 @@ $conn->close();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/style_dash.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Dashboard Main Section */
-        h2 {
-            margin-top: 60px;
-            font-size: 24px;
-            text-align: center;
-        }
-
-        /* สไตล์ปุ่ม Dashboard */
-        .dashboard {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-            gap: 20px;
-        }
-
-        .dashboard-button {
-            flex: 1;
-            padding: 20px;
-            border-radius: 12px;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .dashboard-button:hover {
-            filter: brightness(1.1);
-        }
-
-        .working {
-            background-color: #28a745;
-        }
-
-        /* สีเขียว */
-        .broken {
-            background-color: #ffc107;
-        }
-
-        /* สีเหลือง */
-        .damaged {
-            background-color: #dc3545;
-        }
-
-        /* สีแดง */
-        .sold {
-            background-color: #17a2b8;
-        }
-
-        /* สีฟ้า */
-
-        /* ตาราง */
-        .table-container {
-            width: 100%;
-            margin-top: 20px;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            border-radius: 10px;
-        }
-
-        th,
-        td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        thead {
-            background-color: #ea9227;
-            color: white;
-        }
-
-        tbody tr:hover {
-            background-color: #fdf1e7;
-        }
-
-        .sortable {
-            cursor: pointer;
-        }
-
-        /* Charts */
-        .charts-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-
-        .chart-box {
-            width: 100%;
-            max-width: 600px;
-            height: 400px;
-            margin: auto;
-        }
-        /* ปรับแต่งฟอร์ม */
-    form {
-        font-size: 18px;
-        font-family: Arial, sans-serif;
-        margin-bottom: 15px;
-    }
-
-    /* ปรับแต่ง dropdown */
-    select {
-        font-size: 16px;
-        padding: 8px;
-        border-radius: 10px; /* ทำให้มุมมน */
-        border: 1px solid #ccc;
-        background-color: #fff;
-    }
-
-    /* ปรับแต่งปุ่มตกลง */
-    button {
-        font-size: 16px;
-        padding: 10px 20px;
-        border-radius: 25px; /* ทำให้เป็นวงรี */
-        border: none;
-        background-color: #007bff;
-        color: white;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    /* เปลี่ยนสีเมื่อ hover ปุ่ม */
-    button:hover {
-        background-color: #0056b3;
-    }
-
-    /* ปรับแต่งข้อความย้อนหลัง */
-    p {
-        font-size: 20px;
-        font-weight: bold;
-        color: #333;
-    }
-        
-
-
-    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/dashboardCharts.js"></script>
 </head>
 
 <body>
@@ -268,7 +142,7 @@ $conn->close();
                         <th>รุ่น</th>
                         <th>หมายเลขครุภัณฑ์</th>
                         <th>หมายเลขเครื่อง</th>
-                        <th class="sortable">ปีที่ซื้อ <i class="fa fa-sort"></i></th>
+                        <th class="sortable" onclick="sortTable(6)">ปีที่ซื้อ <i class="fa fa-sort"></i></th>
                         <th>สภาพการใช้งาน</th>
                     </tr>
                 </thead>
@@ -290,88 +164,8 @@ $conn->close();
                 </tbody>
             </table>
         </div>
-
-        <script>
-            function filterData(condition) {
-            const startYear = document.getElementById("start_year").value;
-            const endYear = document.getElementById("end_year").value;
-            window.location.href = `?start_year=${startYear}&end_year=${endYear}&condition=${condition}`;
-        }
-            function updateURL() {
-                const startYear = document.getElementById("start_year").value;
-                const endYear = document.getElementById("end_year").value;
-                window.location.href = `?start_year=${startYear}&end_year=${endYear}`;
-            }
-
-            document.addEventListener("DOMContentLoaded", function() {
-                document.querySelectorAll("th.sortable").forEach(header => {
-                    header.addEventListener("click", function() {
-                        const table = document.getElementById("durableArticlesTable");
-                        const tbody = table.querySelector("tbody");
-                        const headers = Array.from(header.parentElement.children);
-                        const columnIndex = headers.indexOf(header);
-                        sortTable(tbody, columnIndex);
-                    });
-                });
-            });
-
-            function sortTable(tbody, columnIndex) {
-                const rows = Array.from(tbody.querySelectorAll("tr"));
-
-                // ตรวจสอบสถานะการเรียงลำดับ
-                const isAscending = tbody.getAttribute("data-sort") === columnIndex.toString();
-                tbody.setAttribute("data-sort", isAscending ? "" : columnIndex.toString());
-
-                rows.sort((rowA, rowB) => {
-                    const cellA = rowA.cells[columnIndex].textContent.trim();
-                    const cellB = rowB.cells[columnIndex].textContent.trim();
-
-                    // ตรวจสอบหากเป็นตัวเลข
-                    const a = isNaN(cellA) ? cellA : parseInt(cellA);
-                    const b = isNaN(cellB) ? cellB : parseInt(cellB);
-
-                    return isAscending ? b - a : a - b;
-                });
-
-                // ล้างและเพิ่ม `<tr>` กลับเข้าไปใน `<tbody>` ใหม่
-                tbody.innerHTML = "";
-                rows.forEach(row => tbody.appendChild(row));
-            }
-
-            const chartData = <?php echo json_encode(array_values($conditions)); ?>;
-            const labels = ["ใช้งานได้", "ชำรุด", "เสียหาย", "จำหน่ายแล้ว"];
-            const colors = ['#28a745', '#ffc107', '#dc3545', '#17a2b8'];
-
-            // Bar Chart
-            const ctxBar = document.getElementById('barChart').getContext('2d');
-            new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: chartData,
-                        backgroundColor: colors,
-                        borderColor: colors,
-                        borderWidth: 1,
-                        borderRadius: 5, // ทำให้แท่งมีมุมโค้ง
-                        barThickness: 40 // ปรับขนาดแท่งให้พอดี
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        </script>
+        <!-- เพิ่ม div สำหรับส่งข้อมูล -->
+        <div id="chartData" data-conditions='<?php echo json_encode(array_values($conditions)); ?>'></div>
 </body>
 
 </html>
