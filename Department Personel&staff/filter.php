@@ -1,8 +1,7 @@
 <?php
-// ควรมี include 'connet.php'; หากใช้แยกไฟล์
 include dirname(__FILE__) . '/../connet/connect.php';
 
-// ดึงตำแหน่งห้องจากทั้ง r และ r2
+// ดึงตำแหน่งห้อง
 $room_query = mysqli_query($conn, "
     SELECT DISTINCT number FROM tb_room
 ");
@@ -40,7 +39,6 @@ $status_query = mysqli_query($conn, "
     <?php endwhile; ?>
   </select>
 
-  <!-- สถานะการใช้งาน -->
   <!-- สถานะการใช้งาน -->
   <select name="status">
     <option value="">สถานะการใช้งาน</option>
