@@ -160,10 +160,14 @@ $status_display = "";
                         echo "<td>" . $row['year_of_purchase'] . "</td>";
 
                         if ($row['status_of_use'] === 'Borrowed') {
-                            echo "<td style='color: purple; cursor: pointer;' onclick=\"document.getElementById('$modalId').style.display='block'\">" . $status_display . "</td>";
-                        } else {
+                            echo "<td style='color: red; cursor: pointer; text-decoration: underline;' onclick=\"document.getElementById('$modalId').style.display='block'\">" . $status_display . "</td>";
+                          } elseif (in_array($row['condition_of_use'], ['Broken', 'Damaged', 'Sold'])) {
                             echo "<td style='color: #aaa; cursor: default;'>" . $status_display . "</td>";
-                        }
+                          } elseif ($row['condition_of_use'] === 'Working' and $row['status_of_use'] === 'Free') {
+                            echo "<td style='color: green; cursor: pointer;'>" . $status_display . "</td>";
+                          } else {
+                            echo "<td style='color: green; cursor: pointer;'>" . $status_display . "</td>";
+                          }
 
                         echo "</tr>";
 

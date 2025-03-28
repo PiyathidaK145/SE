@@ -204,9 +204,9 @@ $result = mysqli_query($conn, $sql);
             } elseif (in_array($row['condition_of_use'], ['Broken', 'Damaged', 'Sold'])) {
               echo "<td style='color: #aaa; cursor: default;'>" . $status_display . "</td>";
             } elseif ($row['condition_of_use'] === 'Working' and $row['status_of_use'] === 'Free') {
-              echo "<td style='color: green; cursor: pointer; text-decoration: underline;'>" . $status_display . "</td>";
+              echo "<td style='color: green; cursor: pointer;'>" . $status_display . "</td>";
             } else {
-              echo "<td style='color: green; cursor: pointer; text-decoration: underline;'>" . $status_display . "</td>";
+              echo "<td style='color: green; cursor: pointer;'>" . $status_display . "</td>";
             }
 
             echo "</tr>";
