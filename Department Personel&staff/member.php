@@ -2,8 +2,6 @@
 
 include dirname(__FILE__) . '/../connet/connect.php';
 
-
-
 $search = $_GET['search'] ?? '';
 $where = [];
 
@@ -15,7 +13,7 @@ if (!empty($search)) {
             d.brand LIKE '%$like%' OR
             d.series LIKE '%$like%' OR
             d.durable_articles_number LIKE '%$like%' OR
-            d.`serial number` LIKE '%$like%'
+            d.`serial_number` LIKE '%$like%'
         )
     ";
 }
@@ -53,7 +51,7 @@ SELECT
     d.`serial_number`,
     d.year_of_purchase,
     d.condition_of_use,
-    r.number, 
+    r.number,
     b.status_of_use,
     b.time_borrow,
     b.member_id,
@@ -73,6 +71,7 @@ LEFT JOIN tb_member m ON b.member_id = m.member_id
 $where_sql
 ";
 $result = mysqli_query($conn, $sql);
+$status_display = "";
 ?>
 
 <!DOCTYPE html>
@@ -82,7 +81,7 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Purple Dashboard</title>
-    <link rel="stylesheet" href="../css/style_mem.css" />
+    <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
 </head>

@@ -1,55 +1,51 @@
 <?php
 include dirname(__FILE__) . '/../connet/connect.php';
 
-// ตั้งค่าการเข้ารหัส
 $conn->set_charset("utf8");
 
-// กำหนดปีที่ต้องการดึงข้อมูล
-$year = $_GET['year'] ?? date('Y');
-
-// ดึงปีทั้งหมดที่มีในฐานข้อมูล
+// ดึงปีทั้งหมดจากฐานข้อมูล
 $years = [];
 $yearQuery = "SELECT DISTINCT year_of_purchase as year FROM tb_durable_articles ORDER BY year DESC";
 $yearResult = $conn->query($yearQuery);
 while ($row = $yearResult->fetch_assoc()) {
     $years[] = $row['year'];
 }
-$selectedYear = $_GET['year'] ?? ($years[0] ?? date('Y'));
 
-// ดึง `condition_of_use` ที่มีทั้งหมด
+// กำหนดค่าปีที่เลือก
+$startYear = $_GET['start_year'] ?? ($years[count($years) - 1] ?? date('Y'));
+$endYear = $_GET['end_year'] ?? ($years[0] ?? date('Y'));
+
+// ดึงเงื่อนไขที่เลือก
+$selectedCondition = $_GET['condition'] ?? "";
+
+// คำนวณสรุปจำนวน
 $conditions = ["Working" => 0, "Broken" => 0, "Damaged" => 0, "Sold" => 0];
-
-// ดึงข้อมูลตามปีที่เลือก
-$sql = "SELECT condition_of_use, COUNT(*) as count FROM tb_durable_articles WHERE year_of_purchase = ? GROUP BY condition_of_use";
+$sql = "SELECT condition_of_use, COUNT(*) as count FROM tb_durable_articles WHERE year_of_purchase BETWEEN ? AND ? GROUP BY condition_of_use";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $selectedYear);
+$stmt->bind_param("ii", $startYear, $endYear);
 $stmt->execute();
 $result = $stmt->get_result();
-
-// อัปเดตข้อมูล
-$conditions = ["Working" => 0, "Broken" => 0, "Damaged" => 0, "Sold" => 0];
 while ($row = $result->fetch_assoc()) {
-    $conditions[$row["condition_of_use"]] = (int) $row["count"];
-}
-
-$sql = "SELECT condition_of_use, COUNT(*) as count FROM tb_durable_articles GROUP BY condition_of_use";
-$result = $conn->query($sql);
-
-$data = ["Working" => 0, "Broken" => 0, "Damaged" => 0, "Sold" => 0];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $key = $row["condition_of_use"];
-        if (array_key_exists($key, $data)) {
-            $data[$key] = (int) $row["count"];
-        }
+    if (isset($conditions[$row["condition_of_use"]])) {
+        $conditions[$row["condition_of_use"]] = (int) $row["count"];
     }
 }
-// ดึงข้อมูลสำหรับแสดงในตาราง
-$sql = "SELECT * FROM tb_durable_articles WHERE year_of_purchase = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $selectedYear);
+
+// ดึงข้อมูลแสดงในตาราง
+$sql = "SELECT * FROM tb_durable_articles WHERE year_of_purchase BETWEEN ? AND ?";
+if ($selectedCondition) {
+    $sql .= " AND condition_of_use = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iis", $startYear, $endYear, $selectedCondition);
+} else {
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $startYear, $endYear);
+}
 $stmt->execute();
-$result = $stmt->get_result();
+$articleResult = $stmt->get_result();
+
+$yearsDiff = $endYear - $startYear;
+
 $conn->close();
 ?>
 
@@ -59,7 +55,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../css/style_mem.css" />
+    <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -71,36 +67,83 @@ $conn->close();
             text-align: center;
         }
 
-        /* Data Summary */
-        .data-summary {
+        /* สไตล์ปุ่ม Dashboard */
+        .dashboard {
             display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
-            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
             gap: 20px;
-            margin-top: 20px;
         }
 
-        .data-card {
-            width: 23%;
-            padding: 15px;
-            background-color: #ecf0f1;
-            border-radius: 5px;
-            text-align: center;
+        .dashboard-button {
             flex: 1;
             padding: 20px;
             border-radius: 12px;
             color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .data-card h3 {
-            font-size: 20px;
-            color: #2c3e50;
+        .dashboard-button:hover {
+            filter: brightness(1.1);
         }
 
-        .data-card p {
-            font-size: 16px;
-            color: rgb(0, 0, 0);
+        .working {
+            background-color: #28a745;
+        }
+
+        /* สีเขียว */
+        .broken {
+            background-color: #ffc107;
+        }
+
+        /* สีเหลือง */
+        .damaged {
+            background-color: #dc3545;
+        }
+
+        /* สีแดง */
+        .sold {
+            background-color: #17a2b8;
+        }
+
+        /* สีฟ้า */
+
+        /* ตาราง */
+        .table-container {
+            width: 100%;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        thead {
+            background-color: #ea9227;
+            color: white;
+        }
+
+        tbody tr:hover {
+            background-color: #fdf1e7;
+        }
+
+        .sortable {
+            cursor: pointer;
         }
 
         /* Charts */
@@ -116,6 +159,48 @@ $conn->close();
             height: 400px;
             margin: auto;
         }
+        /* ปรับแต่งฟอร์ม */
+    form {
+        font-size: 18px;
+        font-family: Arial, sans-serif;
+        margin-bottom: 15px;
+    }
+
+    /* ปรับแต่ง dropdown */
+    select {
+        font-size: 16px;
+        padding: 8px;
+        border-radius: 10px; /* ทำให้มุมมน */
+        border: 1px solid #ccc;
+        background-color: #fff;
+    }
+
+    /* ปรับแต่งปุ่มตกลง */
+    button {
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 25px; /* ทำให้เป็นวงรี */
+        border: none;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    /* เปลี่ยนสีเมื่อ hover ปุ่ม */
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* ปรับแต่งข้อความย้อนหลัง */
+    p {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+        
+
+
     </style>
 </head>
 
@@ -130,47 +215,51 @@ $conn->close();
         </div>
         <ul class="menu">
             <button class="logout">Logout</button>
-            <li class="active">Dashboard</li>
-            <li>ดูตำแหน่งครุภัณฑ์</li>
+            <li class="active" onclick="window.location.href='Hod_dashboard.php'">Dashboard</li>
+            <li onclick="window.location.href='View_DA.php'">ดูตำแหน่งครุภัณฑ์</li>
         </ul>
     </aside>
 
     <div class="main">
-        <section class="data-summary">
-            <div class="data-card working">
-                <h3>ใช้งานได้</h3>
-                <p><?php echo $data["Working"]; ?> รายการ</p>
+        <!-- ปุ่ม Dashboard -->
+        <section class="dashboard">
+            <div class="dashboard-button working" onclick="filterData('Working')">
+                ใช้งานได้ <br> <?= $conditions["Working"] ?> รายการ
             </div>
-            <div class="data-card broken">
-                <h3>ชำรุด</h3>
-                <p><?php echo $data["Broken"]; ?> รายการ</p>
+            <div class="dashboard-button broken" onclick="filterData('Broken')">
+                ชำรุด <br> <?= $conditions["Broken"] ?> รายการ
             </div>
-            <div class="data-card damaged">
-                <h3>เสียหาย</h3>
-                <p><?php echo $data["Damaged"]; ?> รายการ</p>
+            <div class="dashboard-button damaged" onclick="filterData('Damaged')">
+                เสียหาย <br> <?= $conditions["Damaged"] ?> รายการ
             </div>
-            <div class="data-card sold">
-                <h3>จำหน่ายแล้ว</h3>
-                <p><?php echo $data["Sold"]; ?> รายการ</p>
+            <div class="dashboard-button sold" onclick="filterData('Sold')">
+                จำหน่ายแล้ว <br> <?= $conditions["Sold"] ?> รายการ
             </div>
         </section>
 
         <form>
-            <label for="year">เลือกปี:</label>
-            <select name="year" id="year">
+            <label for="start_year">เลือกปีเริ่มต้น:</label>
+            <select name="start_year" id="start_year">
                 <?php foreach ($years as $year) { ?>
-                    <option value="<?= $year ?>" <?= ($year == $selectedYear) ? 'selected' : '' ?>><?= $year ?></option>
+                    <option value="<?= $year ?>" <?= ($year == $startYear) ? 'selected' : '' ?>><?= $year ?></option>
                 <?php } ?>
             </select>
+            <label for="end_year">เลือกปีสิ้นสุด:</label>
+            <select name="end_year" id="end_year">
+                <?php foreach ($years as $year) { ?>
+                    <option value="<?= $year ?>" <?= ($year == $endYear) ? 'selected' : '' ?>><?= $year ?></option>
+                <?php } ?>
+            </select>
+            <button type="submit">ตกลง</button>
         </form>
+        <p>ย้อนหลัง: <?= abs($yearsDiff) ?> ปี</p>
 
         <section class="charts-container">
             <div class="chart-box"><canvas id="barChart"></canvas></div>
-            <div class="chart-box"><canvas id="pieChart"></canvas></div>
         </section>
 
         <div class="table">
-            <table>
+            <table id="durableArticlesTable">
                 <thead>
                     <tr>
                         <th>ลำดับ </th>
@@ -179,14 +268,14 @@ $conn->close();
                         <th>รุ่น</th>
                         <th>หมายเลขครุภัณฑ์</th>
                         <th>หมายเลขเครื่อง</th>
-                        <th>ปีที่ซื้อ</th>
+                        <th class="sortable">ปีที่ซื้อ <i class="fa fa-sort"></i></th>
                         <th>สภาพการใช้งาน</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $count = 1;
-                    while ($row = $result->fetch_assoc()) { ?>
+                    while ($row = $articleResult->fetch_assoc()) { ?>
                         <tr>
                             <td><?= $count++ ?></td>
                             <td><?= $row['name'] ?></td>
@@ -199,16 +288,59 @@ $conn->close();
                         </tr>
                     <?php } ?>
                 </tbody>
+            </table>
         </div>
 
         <script>
-            document.getElementById("year").addEventListener("change", function() {
-                window.location.href = "?year=" + this.value;
+            function filterData(condition) {
+            const startYear = document.getElementById("start_year").value;
+            const endYear = document.getElementById("end_year").value;
+            window.location.href = `?start_year=${startYear}&end_year=${endYear}&condition=${condition}`;
+        }
+            function updateURL() {
+                const startYear = document.getElementById("start_year").value;
+                const endYear = document.getElementById("end_year").value;
+                window.location.href = `?start_year=${startYear}&end_year=${endYear}`;
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelectorAll("th.sortable").forEach(header => {
+                    header.addEventListener("click", function() {
+                        const table = document.getElementById("durableArticlesTable");
+                        const tbody = table.querySelector("tbody");
+                        const headers = Array.from(header.parentElement.children);
+                        const columnIndex = headers.indexOf(header);
+                        sortTable(tbody, columnIndex);
+                    });
+                });
             });
+
+            function sortTable(tbody, columnIndex) {
+                const rows = Array.from(tbody.querySelectorAll("tr"));
+
+                // ตรวจสอบสถานะการเรียงลำดับ
+                const isAscending = tbody.getAttribute("data-sort") === columnIndex.toString();
+                tbody.setAttribute("data-sort", isAscending ? "" : columnIndex.toString());
+
+                rows.sort((rowA, rowB) => {
+                    const cellA = rowA.cells[columnIndex].textContent.trim();
+                    const cellB = rowB.cells[columnIndex].textContent.trim();
+
+                    // ตรวจสอบหากเป็นตัวเลข
+                    const a = isNaN(cellA) ? cellA : parseInt(cellA);
+                    const b = isNaN(cellB) ? cellB : parseInt(cellB);
+
+                    return isAscending ? b - a : a - b;
+                });
+
+                // ล้างและเพิ่ม `<tr>` กลับเข้าไปใน `<tbody>` ใหม่
+                tbody.innerHTML = "";
+                rows.forEach(row => tbody.appendChild(row));
+            }
 
             const chartData = <?php echo json_encode(array_values($conditions)); ?>;
             const labels = ["ใช้งานได้", "ชำรุด", "เสียหาย", "จำหน่ายแล้ว"];
-            const colors = ['#4caf50', '#f44336', '#ff9800', '#2196f3'];
+            const colors = ['#28a745', '#ffc107', '#dc3545', '#17a2b8'];
 
             // Bar Chart
             const ctxBar = document.getElementById('barChart').getContext('2d');
@@ -235,31 +367,6 @@ $conn->close();
                     plugins: {
                         legend: {
                             display: false
-                        } // ไม่แสดง label ใน bar chart
-                    }
-                }
-            });
-
-            // Pie Chart
-            const ctxPie = document.getElementById('pieChart').getContext('2d');
-            new Chart(ctxPie, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: chartData,
-                        backgroundColor: colors
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom', // เลื่อน labels ไปอยู่ด้านล่าง
-                            labels: {
-                                usePointStyle: true, // ให้ labels เป็นจุดแทนสี่เหลี่ยม
-                                pointStyle: 'circle' // ใช้จุดเป็นวงกลม
-                            }
                         }
                     }
                 }

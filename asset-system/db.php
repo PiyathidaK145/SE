@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
 $user = "root";
-$pass = "";
-$dbname = "asset_db"; // <- ฐานข้อมูลที่คุณใช้
+$pass = "123456";
+$dbname = "sys_durable_articles"; // <- ฐานข้อมูลที่คุณใช้
 
 $conn = new mysqli($host, $user, $pass, $dbname);
 

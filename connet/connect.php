@@ -12,6 +12,9 @@
         die("Connection failed: " . mysqli_connect_error());
     }
     //echo "Connected successfully";
-    define('WP', 'se2025');
 
+    // ป้องกันการกำหนดค่าซ้ำ
+    if (!defined('WP')) {
+        define('WP', 'se2025');
+    }
 ?>

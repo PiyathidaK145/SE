@@ -80,24 +80,12 @@ h2 {
 .chart-box {
     width: 48%;
 }
-
-/* Make it responsive */
-@media screen and (max-width: 768px) {
-    .data-summary {
-        flex-direction: column;
-    }
-
-    .data-card {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .charts-container {
-        flex-direction: column;
-    }
-
-    .chart-box {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-}
+/* ตารางแถวคี่และแถวคู่ */
+.table tbody tr:nth-child(odd) {
+    background-color: #f7f7f7; /* สีพื้นหลังของแถวคี่ */
+  }
+  
+  .table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* สีพื้นหลังของแถวคู่ */
+  }
+  
