@@ -12,7 +12,7 @@ date_default_timezone_set('Asia/Bangkok');
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
     }
-    define('WP', 'se2025');
+    //define('WP', 'se2025');
 
     // ป้องกันการกำหนดค่าซ้ำ
     //if (!defined('WP')) {

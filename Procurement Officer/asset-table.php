@@ -54,7 +54,7 @@ if (!empty($_GET['status'])) {
   } elseif ($status === 'Borrowed') {
     $where[] = "b.status_of_use = 'Borrowed'";
   } elseif ($status === 'Unavailable') {
-    $where[] = "(d.condition_of_use IN ('Broken', 'Damaged'))";
+    $where[] = "(d.condition_of_use IN ('Broken', 'Damaged', 'Sold'))";
   }
 }
 

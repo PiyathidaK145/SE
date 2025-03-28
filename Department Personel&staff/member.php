@@ -107,7 +107,7 @@ $status_display = "";
 
     <div class="main">
         <div class="topbar">
-            <?php include 'flutter.php'; ?>
+            <?php include 'filter.php'; ?>
         </div>
 
         <div class="table">
