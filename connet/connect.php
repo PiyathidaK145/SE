@@ -4,6 +4,7 @@ date_default_timezone_set('Asia/Bangkok');
     $username = "root";
     $password = "123456";
     $dbname = "sys_durable_articles";
+    $base_url = "http://localhost:8081/SE";
 
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -12,10 +13,10 @@ date_default_timezone_set('Asia/Bangkok');
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
     }
-    //define('WP', 'se2025');
 
-    // ป้องกันการกำหนดค่าซ้ำ
-    //if (!defined('WP')) {
-        //define('WP', 'se2025');
-    //}
+    if (!defined('WP')) {
+        define('WP', 'se2025');
+    }
+    
+
 ?>

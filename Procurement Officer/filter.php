@@ -1,7 +1,8 @@
 <?php
+// ควรมี include 'connet.php'; หากใช้แยกไฟล์
 include dirname(__FILE__) . '/../connet/connect.php';
 
-// ดึงตำแหน่งห้อง
+// ดึงตำแหน่งห้องจากทั้ง r และ r2
 $room_query = mysqli_query($conn, "
     SELECT DISTINCT number FROM tb_room
 ");

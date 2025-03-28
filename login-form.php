@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-include dirname(__FILE__) . '/../connet/connect.php';
+include dirname(__FILE__) . '/connet/connect.php';
 
 $username = mysqli_real_escape_string($conn, $_POST['username']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
@@ -19,11 +19,11 @@ if (!empty($username) && !empty($password)) {
 
             // เปลี่ยน path ไปหน้าของแต่ละ role
             if ($user['position_id'] == 1101) {
-                header("Location: {$base_url}/home_1101.php");
+                header("Location: {$base_url}/Head of Department/Hod_dashboard.php");
             } else if ($user['position_id'] == 1102) {
-                header("Location: {$base_url}/home_1102.php");
+                header("Location: {$base_url}/Procurement Officer/asset-table.php");
             } else {
-                header("Location: {$base_url}/home_proff.php");
+                header("Location: {$base_url}/Department Personel&staff/member.php");
             }
             exit();
         }

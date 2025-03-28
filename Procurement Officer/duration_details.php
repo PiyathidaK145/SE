@@ -1,5 +1,14 @@
 <?php
+session_start();
 include dirname(__FILE__) . '/../connet/connect.php';
+if(empty($_SESSION[WP . 'checklogin'])){
+    $_SESSION['message']  = "ยังไม่ได้เข้าสู่ระบบ";
+    header("Location: {$base_url}/login.php");
+}
+
+$member_id= $_SESSION[WP . 'member_id'];
+$query = mysqli_query($conn, "SELECT * FROM tb_member WHERE member_id = '{$member_id}'") or die('query failed');
+$user = mysqli_fetch_assoc($query);
 
 $successCount = 0;
 $duplicateCount = 0;
@@ -108,9 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
         fclose($handle);
     }
 
-    // echo "✅ สำเร็จ: $successCount รายการ | ";
-    // echo "❌ ล้มเหลว: $errorCount รายการ | ";
-    // echo "⚠️ ซ้ำ : $duplicateCount รายการ";
 }
 
 $search = $_GET['search'] ?? '';
@@ -177,7 +183,13 @@ SELECT
     d.series,
     d.durable_articles_number,
     d.serial_number,
+<<<<<<< HEAD
     d.condition_of_use,
+=======
+    d.year_of_purchase,
+    r.number AS current_location, 
+    COALESCE(b.status_of_use, d.condition_of_use) AS usage_condition,
+>>>>>>> dfba771846c4588973fb37bf5649a62d6665d83e
     d.price,
     d.annual_warranty,
     d.year_of_purchase,
@@ -237,14 +249,14 @@ $result = mysqli_query($conn, $sql);
             <img src="../image/logo.jpg" alt="" style="width: 200px;">
         </div>
         <div class="profile">
-            <img src="https://i.pravatar.cc/50?img=3" alt="Profile" />
             <div>
-                <h4>David Grey. H</h4>
-                <span>Project Manager</span>
-            </div>
+                <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>นักวิชาการพัสดุ</span>
+                <a class= "logout" href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
+            </div>  
         </div>
         <ul class="menu">
-            <button class="logout">logout</button>
+            <li onclick="window.location.href='asset-table.php'">ดูตำแหน่งครุภัณฑ์</li>
+            <li class="active">รายละเอียดครุภัณฑ์</li>
         </ul>
     </div>
 
@@ -310,6 +322,7 @@ $result = mysqli_query($conn, $sql);
                         }
 
                         echo "<tr>";
+<<<<<<< HEAD
                         echo "<td>" . $count++ . "</td>";
                         echo "<td>" . $row['name'] . "</td>";
                         echo "<td>" . $row['brand'] . "</td>";
@@ -317,6 +330,16 @@ $result = mysqli_query($conn, $sql);
                         echo "<td>" . $row['durable_articles_number'] . "</td>";
                         echo "<td>" . $row['serial_number'] . "</td>";
                         echo "<td>" . ($row['number'] ?? '-') . "</td>";
+=======
+                        echo "<td>{$count}</td>";
+                        echo "<td>{$row['name']}</td>";
+                        echo "<td>{$row['brand']}</td>";
+                        echo "<td>{$row['series']}</td>";
+                        echo "<td>{$row['durable_articles_number']}</td>";
+                        echo "<td>{$row['serial_number']}</td>";
+                        echo "<td>" . ($row['current_location'] ?? '-') . "</td>";
+                        echo "<td>{$status_th}</td>";
+>>>>>>> dfba771846c4588973fb37bf5649a62d6665d83e
                         echo "<td>" . number_format($row['price'], 2) . "</td>";
                         echo "<td>" . $row['year_of_purchase'] . "</td>";
                         echo "<td>" . $row['annual_warranty'] . "</td>";

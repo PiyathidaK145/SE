@@ -1,6 +1,16 @@
 <?php
 
+session_start();
 include dirname(__FILE__) . '/../connet/connect.php';
+if(empty($_SESSION[WP . 'checklogin'])){
+    $_SESSION['message']  = "ยังไม่ได้เข้าสู่ระบบ";
+    header("Location: {$base_url}/login.php");
+}
+
+$member_id= $_SESSION[WP . 'member_id'];
+$query = mysqli_query($conn, "SELECT * FROM tb_member WHERE member_id = '{$member_id}'") or die('query failed');
+$user = mysqli_fetch_assoc($query);
+
 include_once 'borrow_modal.php';
 
 
@@ -54,7 +64,7 @@ if (!empty($_GET['status'])) {
   } elseif ($status === 'Borrowed') {
     $where[] = "b.status_of_use = 'Borrowed'";
   } elseif ($status === 'Unavailable') {
-    $where[] = "(d.condition_of_use IN ('Broken', 'Damaged', 'Sold'))";
+    $where[] = "(d.condition_of_use IN ('Broken', 'Damaged'))";
   }
 }
 
@@ -114,15 +124,14 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <div class="profile">
-      <img src="https://i.pravatar.cc/50?img=3" alt="Profile" />
       <div>
-        <h4>David Grey. H</h4>
-        <span>Project Manager</span>
+        <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>นักวิชาการพัสดุ</span>
+        <a class= "logout" href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
       </div>
     </div>
     <ul class="menu">
-      <button class="logout">logout</button>
       <li class="active">ดูตำแหน่งครุภัณฑ์</li>
+      <li onclick="window.location.href='duration_details.php'">รายละเอียดครุภัณฑ์</li><br>
     </ul>
   </div>
 

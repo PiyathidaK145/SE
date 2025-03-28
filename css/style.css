@@ -82,13 +82,15 @@ body {
   height: 40px;
   justify-content: center;
   border-radius: 10px;
-  background-color: #ffeee3;
-  border-color: #ea9227;
-  border: 1px solid #ea9227;
+  background-color: #3485ee;
+  border-color: #ffffff;
+  border: 1px solid #ffffff;
   font-size: 15px;
   cursor: pointer;
 }
-
+.logout:hover{
+  background-color: #e22020;
+}
 /* ตั้งค่าเนื้อหาหลักให้ชิดขวาของ Sidebar */
 .main {
   flex-grow: 1;
