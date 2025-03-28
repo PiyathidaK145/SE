@@ -2,8 +2,6 @@
 
 include dirname(__FILE__) . '/../connet/connect.php';
 
-
-
 $search = $_GET['search'] ?? '';
 $where = [];
 
@@ -129,6 +127,7 @@ $result = mysqli_query($conn, $sql);
                 <tbody>
                     <?php
                     $count = 1;
+                    $status_display = '';
                     while ($row = mysqli_fetch_assoc($result)) {
                         if ($row['status_of_use'] === 'Borrowed') {
                             $status_display = 'ถูกยืม';

@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Bangkok');
     $servername = "localhost";
     $username = "root";
     $password = "123456";
@@ -12,6 +13,6 @@
         die("Connection failed: " . mysqli_connect_error());
     }
     //echo "Connected successfully";
-    define('WP', 'se2025');
+    //define('WP', 'se2025');
 
 ?>
