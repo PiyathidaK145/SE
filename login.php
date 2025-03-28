@@ -2,7 +2,6 @@
 session_start();
 include __DIR__ . '/connet/connect.php';
 
-
 ?>
 
 <!DOCTYPE html>

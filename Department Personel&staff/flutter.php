@@ -16,17 +16,12 @@ $year_query = mysqli_query($conn, "
 $status_query = mysqli_query($conn, "
     SELECT DISTINCT status_of_use FROM tb_borrowing
 ");
-
-// ดึงสภาพการใช้งาน
-$condition_query = mysqli_query($conn, "
-    SELECT DISTINCT condition_of_use FROM tb_durable_articles
-");
 ?>
 
-<form method="GET" style="display: flex; gap: 10px; align-items: center; white-space: nowrap; overflow-x: auto; flex-wrap: nowrap;">
+<form method="GET" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
 
   <!-- ตำแหน่งห้อง -->
-  <select name="room" style="width: 175px">
+  <select name="room">
     <option value="">ตำแหน่งปัจจุบัน</option>
     <?php while ($row = mysqli_fetch_assoc($room_query)): ?>
       <option value="<?= $row['number'] ?>" <?= ($_GET['room'] ?? '') == $row['number'] ? 'selected' : '' ?>>
@@ -36,7 +31,7 @@ $condition_query = mysqli_query($conn, "
   </select>
 
   <!-- ปีที่ซื้อ -->
-  <select name="year" style="width: 175px">
+  <select name="year">
     <option value="">ปีที่ซื้อ</option>
     <?php while ($row = mysqli_fetch_assoc($year_query)): ?>
       <option value="<?= $row['year_of_purchase'] ?>" <?= ($_GET['year'] ?? '') == $row['year_of_purchase'] ? 'selected' : '' ?>>
@@ -45,18 +40,9 @@ $condition_query = mysqli_query($conn, "
     <?php endwhile; ?>
   </select>
 
-  <!-- สภาพการใช้งาน -->
-  <select name="condition" style="width: 175px">
-    <option value="">สภาพการใช้งาน</option>
-
-    <option value="Working" <?= ($_GET['condition'] ?? '') == 'Working' ? 'selected' : '' ?>>ใช้งานได้</option>
-    <option value="Broken" <?= ($_GET['condition'] ?? '') == 'Broken' ? 'selected' : '' ?>>ชำรุด</option>
-    <option value="Damaged" <?= ($_GET['condition'] ?? '') == 'Damaged' ? 'selected' : '' ?>>เสียหาย</option>
-    <option value="Sold" <?= ($_GET['condition'] ?? '') == 'Sold' ? 'selected' : '' ?>>จำหน่ายแล้ว</option>
-  </select>
-
   <!-- สถานะการใช้งาน -->
-  <select name="status" style="width: 175px">
+  <!-- สถานะการใช้งาน -->
+  <select name="status">
     <option value="">สถานะการใช้งาน</option>
 
     <option value="Borrowed" <?= ($_GET['status'] ?? '') == 'Borrowed' ? 'selected' : '' ?>>ถูกยืม</option>

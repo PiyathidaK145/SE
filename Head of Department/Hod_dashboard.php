@@ -1,5 +1,14 @@
 <?php
+session_start();
 include dirname(__FILE__) . '/../connet/connect.php';
+if(empty($_SESSION[WP . 'checklogin'])){
+    $_SESSION['message']  = "ยังไม่ได้เข้าสู่ระบบ";
+    header("Location: {$base_url}/login.php");
+}
+
+$member_id= $_SESSION[WP . 'member_id'];
+$query = mysqli_query($conn, "SELECT * FROM tb_member WHERE member_id = '{$member_id}'") or die('query failed');
+$user = mysqli_fetch_assoc($query);
 
 $conn->set_charset("utf8");
 
@@ -208,15 +217,14 @@ $conn->close();
     <aside class="sidebar">
         <div class="logo"><img src="../image/logo.jpg" alt="Company Logo" style="width: 200px;"></div>
         <div class="profile">
-            <img src="https://i.pravatar.cc/50?img=3" alt="Profile Picture" title="David Grey. H" />
             <div>
-                <h4>David Grey. H</h4><span>Project Manager</span>
+                <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>หัวหน้าภาควิชา</span>
             </div>
         </div>
         <ul class="menu">
-            <button class="logout">Logout</button>
             <li class="active" onclick="window.location.href='Hod_dashboard.php'">Dashboard</li>
-            <li onclick="window.location.href='View_DA.php'">ดูตำแหน่งครุภัณฑ์</li>
+            <li onclick="window.location.href='View_DA.php'">ดูตำแหน่งครุภัณฑ์</li> <br>
+            <a href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
         </ul>
     </aside>
 
