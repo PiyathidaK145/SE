@@ -128,6 +128,7 @@ $status_display = "";
                 <tbody>
                     <?php
                     $count = 1;
+                    $status_display = '';
                     while ($row = mysqli_fetch_assoc($result)) {
                         if ($row['status_of_use'] === 'Borrowed') {
                             $status_display = 'ถูกยืม';
