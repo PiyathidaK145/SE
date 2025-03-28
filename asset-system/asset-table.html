@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Asset Table</title>
+  <link rel="stylesheet" href="asset-table.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2 class="logo">Menu</h2>
+    <div class="profile">
+      <img src="https://i.pravatar.cc/50?img=3" alt="Profile" />
+      <div>
+        <h4>David Grey. H</h4>
+        <span>Project Manager</span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li>หน้าหลัก</li>
+      <li class="active" id="toggleTable">ดูตำแหน่งครุภัณฑ์</li>
+      <li>รายละเอียดครุภัณฑ์</li>
+    </ul>
+  </div>
+
+  <div class="content" id="tableSection">
+    <div class="filter-bar">
+      <input list="categoryList" id="categoryInput" placeholder="หมวดหมู่">
+      <datalist id="categoryList">
+        <option value="คอมพิวเตอร์">
+        <option value="เครื่องใช้สำนักงาน">
+        <option value="เฟอร์นิเจอร์">
+      </datalist>
+
+      <input list="yearList" id="yearInput" placeholder="ปีที่ซื้อ">
+      <datalist id="yearList">
+        <option value="2558">
+        <option value="2559">
+        <option value="2560">
+        <option value="2561">
+        <option value="2562">
+        <option value="2563">
+        <option value="2564">
+        <option value="2565">
+        <option value="2566">
+        <option value="2567">
+      </datalist>
+
+      <input list="statusList" id="statusInput" placeholder="สถานะการใช้งานครุภัณฑ์">
+      <datalist id="statusList">
+        <option value="ว่าง">
+        <option value="ไม่พร้อมใช้งาน">
+        <option value="ถูกยืม">
+      </datalist>
+
+      <input type="text" id="searchInput" placeholder="ค้นหาครุภัณฑ์...">
+      <button onclick="filterTable()">🔍</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ที่</th>
+          <th>ชื่อ</th>
+          <th>ยี่ห้อ</th>
+          <th>รุ่น</th>
+          <th>หมายเลขครุภัณฑ์</th>
+          <th>หมายเลขเครื่อง</th>
+          <th>ตำแหน่งใช้งาน</th>
+          <th>สภาพการใช้งาน</th>
+          <th>สถานะการใช้งาน</th>
+          <th>ปีที่ซื้อ</th>
+          <th>หมายเหตุ</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody id="dataTable"></tbody>
+    </table>
+  </div>
+
+  <div id="borrowModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>รายละเอียดการยืม</h3>
+      <p><strong>👤 ผู้ยืม:</strong> <span id="modalBorrower"></span></p>
+      <p><strong>📅 วันที่ยืม:</strong> <span id="modalDate"></span></p>
+      <p><strong>⏰ เวลา:</strong> <span id="modalTime"></span></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("toggleTable").addEventListener("click", () => {
+      const tableSection = document.getElementById("tableSection");
+      tableSection.style.display = tableSection.style.display === "none" ? "block" : "none";
+    });
+
+    function deleteRow(element, index) {
+      if (confirm("คุณแน่ใจว่าต้องการลบรายการนี้หรือไม่?")) {
+        let records = JSON.parse(localStorage.getItem("assetRecords")) || [];
+        records.splice(index, 1);
+        localStorage.setItem("assetRecords", JSON.stringify(records));
+        renderTableFromStorage();
+      }
+    }
+
+    function editRow(index) {
+      const records = JSON.parse(localStorage.getItem("assetRecords")) || [];
+      const data = records[index];
+      data.index = index;
+      localStorage.setItem("editData", JSON.stringify(data));
+      window.location.href = "edit-asset.html";
+    }
+
+    function renderTableFromStorage() {
+      const records = JSON.parse(localStorage.getItem("assetRecords")) || [];
+      const tbody = document.getElementById("dataTable");
+      tbody.innerHTML = "";
+
+      records.forEach((data, i) => {
+        const row = document.createElement("tr");
+        const statusCell = data.status === 'ถูกยืม'
+          ? `<td class="status-borrowed" onclick="showBorrowInfo('${data.borrower || '-'}', '${data.borrowDate || '-'}', '${data.borrowTime || '-'}')">${data.status}</td>`
+          : `<td class="${data.status === 'ไม่พร้อมใช้งาน' ? 'status-unavailable' : ''}">${data.status}</td>`;
+
+        row.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${data.name}</td>
+          <td>${data.brand}</td>
+          <td>${data.model}</td>
+          <td>${data.assetId}</td>
+          <td>${data.serial}</td>
+          <td>${data.location}</td>
+          <td>${data.condition}</td>
+          ${statusCell}
+          <td>${data.year}</td>
+          <td>${data.note}</td>
+          <td class="action-box">
+            <a class="edit" href="#" onclick="editRow(${i})">แก้ไข</a>
+            <span class="delete" onclick="deleteRow(this, ${i})">ลบ</span>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function filterTable() {
+      const category = document.getElementById('categoryInput').value.toLowerCase();
+      const status = document.getElementById('statusInput').value.toLowerCase();
+      const year = document.getElementById('yearInput').value.toLowerCase();
+      const keyword = document.getElementById('searchInput').value.toLowerCase();
+
+      const rows = document.querySelectorAll("tbody tr");
+
+      rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        const name = cells[1].textContent.toLowerCase();
+        const cat = cells[2].textContent.toLowerCase();
+        const state = cells[8].textContent.toLowerCase();
+        const yearVal = cells[9].textContent.toLowerCase();
+
+        const matchCategory = category === "" || cat.includes(category);
+        const matchStatus = status === "" || state.includes(status);
+        const matchYear = year === "" || yearVal.includes(year);
+        const matchKeyword = keyword === "" || name.includes(keyword);
+
+        row.style.display = (matchCategory && matchStatus && matchYear && matchKeyword) ? "" : "none";
+      });
+    }
+
+    function showBorrowInfo(borrower, date, time) {
+      const thaiMonths = [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+      ];
+
+      let formattedDate = date;
+      if (date && date.includes("-")) {
+        const [year, month, day] = date.split("-");
+        const thaiYear = parseInt(year) + 543;
+        const thaiMonth = thaiMonths[parseInt(month, 10) - 1];
+        formattedDate = `${parseInt(day, 10)} ${thaiMonth} ${thaiYear}`;
+      }
+
+      const formattedTime = time ? `${time} น.` : "-";
+      document.getElementById("modalBorrower").innerText = borrower;
+      document.getElementById("modalDate").innerText = formattedDate;
+      document.getElementById("modalTime").innerText = formattedTime;
+      document.getElementById("borrowModal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("borrowModal").style.display = "none";
+    }
+
+    window.addEventListener("click", function(event) {
+      const modal = document.getElementById("borrowModal");
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+
+    window.onload = () => {
+      if (!localStorage.getItem("assetRecords")) {
+        const demo = [
+          {
+            name: "คอมพิวเตอร์",
+            brand: "คอมพิวเตอร์",
+            model: "Pro Tower 280 G9",
+            assetId: "001",
+            serial: "cd-123",
+            location: "SC-2-308",
+            condition: "ใช้งานได้",
+            status: "ถูกยืม",
+            year: "2561",
+            note: "-",
+            borrower: "นายสมชาย",
+            borrowDate: "2025-03-26",
+            borrowTime: "13:30"
+          }
+        ];
+        localStorage.setItem("assetRecords", JSON.stringify(demo));
+      }
+      renderTableFromStorage();
+    };
+  </script>
+</body>
+</html>

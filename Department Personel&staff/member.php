@@ -50,7 +50,7 @@ SELECT
     d.brand,
     d.series,
     d.durable_articles_number,
-    d.`serial number`,
+    d.`serial_number`,
     d.year_of_purchase,
     d.condition_of_use,
     r.number, 
@@ -61,7 +61,7 @@ SELECT
     m.first_name,
     m.last_name
 FROM tb_durable_articles d
-LEFT JOIN tb_borrowing b 
+LEFT JOIN tb_borrowing b
     ON d.durable_articles_id = b.durable_articles_id
     AND b.time_borrow = (
         SELECT MAX(time_borrow)
@@ -72,7 +72,6 @@ LEFT JOIN tb_room r ON b.room_id = r.room_id
 LEFT JOIN tb_member m ON b.member_id = m.member_id
 $where_sql
 ";
-
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -137,8 +136,8 @@ $result = mysqli_query($conn, $sql);
                             $status_display = 'ไม่พร้อมใช้งาน';
                         } elseif ($row['condition_of_use'] === 'Working') {
                             $status_display = 'ว่าง';
-                        } 
-                        
+                        }
+
                         $modalId = "modal_" . $row['durable_articles_id']; // สร้าง ID เฉพาะของ modal
                         $Date = empty($row['time_borrow']) ? '-' : ($row['time_borrow']);
                         $borrower = $row['academic_ranks'] . $row['first_name'] . " " . $row['last_name'];
@@ -149,7 +148,7 @@ $result = mysqli_query($conn, $sql);
                         echo "<td>" . $row['brand'] . "</td>";
                         echo "<td>" . $row['series'] . "</td>";
                         echo "<td>" . $row['durable_articles_number'] . "</td>";
-                        echo "<td>" . $row['serial number'] . "</td>";
+                        echo "<td>" . $row['serial_number'] . "</td>";
                         echo "<td>" . ($row['number'] ?? '-') . "</td>";
                         echo "<td>" . $row['year_of_purchase'] . "</td>";
 
@@ -182,4 +181,5 @@ $result = mysqli_query($conn, $sql);
 
     </div>
 </body>
+
 </html>
