@@ -130,7 +130,8 @@ $result = mysqli_query($conn, $sql);
       </div>
     </div>
     <ul class="menu">
-      <li class="active">ดูตำแหน่งครุภัณฑ์</li>
+      <li onclick="window.location.href='Hod_dashboard.php'">Dashboard</li>
+      <li class="active"onclick="window.location.href='asset-table.php'">ดูตำแหน่งครุภัณฑ์</li>
       <li onclick="window.location.href='duration_details.php'">รายละเอียดครุภัณฑ์</li><br>
     </ul>
   </div>
