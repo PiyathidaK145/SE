@@ -6,14 +6,57 @@
 }
 
 body {
-  /* display: flex;
-  background: #f7f5fc;
-  color: #333; */
   display: flex;
   background: #f7f5fc;
   color: #333;
   background-color: #f7f2f2;
 }
+
+.table table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.table thead {
+  background-color: #ea9227;
+  /* สีเทาหัวตาราง */
+  color: white;
+}
+
+.table thead th {
+  padding: 12px 10px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.table tbody td {
+  padding: 10px;
+  text-align: center;
+  color: #333;
+  font-size: 15px;
+}
+
+table tbody tr:hover {
+  background-color: #fdf1e7;
+  /* สีส้มอ่อน */
+}
+
+.table thead th:nth-child(5),
+.table thead th:nth-child(6) {
+  min-width: 160px;
+  /* สำหรับคอลัมน์ หมายเลขครุภัณฑ์ และ หมายเลขเครื่อง */
+}
+
+
 
 .sidebar {
   width: 250px;
@@ -25,13 +68,20 @@ body {
 
 .logo {
   color: purple;
-  margin-bottom: 20px;
+  margin-bottom: 480px;
+
+}
+
+.logo h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
 }
 
 .profile {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .profile img {
@@ -42,6 +92,18 @@ body {
 
 .profile h4 {
   margin-bottom: 4px;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+  height: 25px;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: #ffeee3;
+  border-color: #ea9227;
 }
 
 .menu {
@@ -64,61 +126,28 @@ body {
 .main {
   flex-grow: 1;
   padding: 20px;
-  margin-top: -17%;
 }
 
-table {
-  border-radius: 10px;
-  width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  background-color: white;
-  table-layout: fixed;
+.menu li {
+  padding: 10px;
+  color: #777;
+  cursor: pointer;
 }
 
-table,
-th,
-td {
-  background-color: white;
-}
-
-th,
-td {
-  width: 100%;
-  border-bottom: 1px solid #ddd;
-  padding: 12px 10px;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-th {
-  color: white;
-  background-color: #ea9227;
-}
-
-.content {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-table,td:hover {
-  background-color: #fdf1e7; /* สีส้มอ่อน */
-}
-
-select {
-  width: 20%;
-  padding: 8px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  margin-right: 10px;
+.menu li.active,
+.menu li:hover {
+  background-color: #f0f0ff;
+  color: #5e35b1;
+  border-radius: 8px;
 }
 
 .topbar {
   display: flex;
-  justify-content: center; /* จัดตรงกลางแนวนอน */
+  justify-content: center;
+  /* จัดตรงกลางแนวนอน */
   align-items: center;
-  flex-wrap: wrap; /* ถ้ามีหลายชิ้นจะขึ้นบรรทัดใหม่ */
+  flex-wrap: wrap;
+  /* ถ้ามีหลายชิ้นจะขึ้นบรรทัดใหม่ */
   gap: 10px;
   padding: 20px;
   border-radius: 15px;
@@ -132,6 +161,7 @@ select {
   justify-content: center;
   align-items: center;
 }
+
 
 .topbar select {
   width: 230px;
@@ -150,6 +180,7 @@ select {
   border: 1px solid #ccc;
   font-size: 15px;
 }
+
 .topbar button {
   height: 40px;
   padding: 0 16px;
@@ -160,96 +191,4 @@ select {
   cursor: pointer;
   border: 1px solid #ccc;
   font-size: 15px;
-}
-
-
-.filters {
-  display: flex; /* ใช้ flexbox เพื่อจัดวาง elements */
-  gap: 10px; /* ช่องว่างระหว่าง dropdown filters */
-}
-
-.filters select {
-  width: 200px; /* กำหนดความกว้างของ dropdown filter อย่างคงที่ */
-  padding: 5px; /* เพิ่ม padding ภายใน */
-  box-sizing: border-box; /* เพื่อให้ padding ถูกรวมอยู่ในความกว้างทั้งหมด */
-}
-
-.filters select,
-.search-bar input {
-  width: 100%;
-  /* กำหนดให้ dropdown และ search bar ปรับความกว้างตามเนื้อหาหรือหน้าจอ */
-  min-width: 150px;
-  /* ตั้งค่าความกว้างขั้นต่ำ เพื่อไม่ให้ dropdown เล็กเกินไป */
-}
-
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.header-row select,
-.search-bar input {
-  margin: 20px;
-  padding: 10px;
-  width: 200px;
-  margin-top: 20rem;
-}
-
-.search-bar {
-  display: flex;
-  align-items: center;
-}
-
-
-.search-bar input {
-  padding: 10px;
-  width: 200px;
-  border-radius: 10px;
-  border: px solid #ccc;
-}
-
-.search-bar button {
-  padding: 6px 12px;
-  margin-left: -5px;
-  color: rgb(0, 0, 0);
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-top: 95%;
-  width: 80px;
-  height: 40px;
-}
-
-.search-bar button :hover {
-  padding: 6px 12px;
-  margin-left: -5px;
-  background-color:#ab8bec;
-  color: #ffffff;
-  border: 2px solid #ffffff;
-  border-radius: 20px;
-  cursor: pointer;
-  margin-top: 19rem;
-  width: 80px;
-  height: 40px;
-}
-
-.pagination {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-a {
-  text-decoration: none;
-  color: #333;
-}
-
-
-@media (max-width: 768px) {
-  .filters {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
