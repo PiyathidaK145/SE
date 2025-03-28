@@ -11,12 +11,6 @@ $query = mysqli_query($conn, "SELECT * FROM tb_member WHERE member_id = '{$membe
 $user = mysqli_fetch_assoc($query);
 
 $conn->set_charset("utf8");
-
-// เช็คการเชื่อมต่อฐานข้อมูล
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 // ดึงปีทั้งหมดจากฐานข้อมูล
 $years = [];
 $yearQuery = "SELECT DISTINCT year_of_purchase as year FROM tb_durable_articles ORDER BY year DESC";
@@ -85,6 +79,7 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/dashboardCharts.js"></script>
+    
 </head>
 
 <body>
@@ -151,7 +146,7 @@ $conn->close();
                         <th>รุ่น</th>
                         <th>หมายเลขครุภัณฑ์</th>
                         <th>หมายเลขเครื่อง</th>
-                        <th class="sortable" onclick="sortTable(6)">ปีที่ซื้อ <i class="fa fa-sort"></i></th>
+                        <th class="sortable" onclick="sortTable()">ปีที่ซื้อ <i class="fa fa-sort"></i></th>
                         <th>สภาพการใช้งาน</th>
                     </tr>
                 </thead>

@@ -21,7 +21,7 @@ if (!empty($username) && !empty($password)) {
             if ($user['position_id'] == 1101) {
                 header("Location: {$base_url}/Head of Department/Hod_dashboard.php");
             } else if ($user['position_id'] == 1102) {
-                header("Location: {$base_url}/Procurement Officer/asset-table.php");
+                header("Location: {$base_url}/Procurement Officer/Hod_dashboard.php");
             } else {
                 header("Location: {$base_url}/Department Personel&staff/member.php");
             }

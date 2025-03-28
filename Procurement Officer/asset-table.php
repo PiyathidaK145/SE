@@ -2,12 +2,12 @@
 
 session_start();
 include dirname(__FILE__) . '/../connet/connect.php';
-if(empty($_SESSION[WP . 'checklogin'])){
-    $_SESSION['message']  = "ยังไม่ได้เข้าสู่ระบบ";
-    header("Location: {$base_url}/login.php");
+if (empty($_SESSION[WP . 'checklogin'])) {
+  $_SESSION['message']  = "ยังไม่ได้เข้าสู่ระบบ";
+  header("Location: {$base_url}/login.php");
 }
 
-$member_id= $_SESSION[WP . 'member_id'];
+$member_id = $_SESSION[WP . 'member_id'];
 $query = mysqli_query($conn, "SELECT * FROM tb_member WHERE member_id = '{$member_id}'") or die('query failed');
 $user = mysqli_fetch_assoc($query);
 
@@ -113,8 +113,10 @@ $result = mysqli_query($conn, $sql);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ดูตำแหน่งครุภัณฑ์</title>
   <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/style_dash.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <script src="../js/sort.js"></script>
 </head>
 
 <body>
@@ -126,12 +128,12 @@ $result = mysqli_query($conn, $sql);
     <div class="profile">
       <div>
         <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>นักวิชาการพัสดุ</span>
-        <a class= "logout" href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
+        <a class="logout" href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
       </div>
     </div>
     <ul class="menu">
       <li onclick="window.location.href='Hod_dashboard.php'">Dashboard</li>
-      <li class="active"onclick="window.location.href='asset-table.php'">ดูตำแหน่งครุภัณฑ์</li>
+      <li class="active" onclick="window.location.href='asset-table.php'">ดูตำแหน่งครุภัณฑ์</li>
       <li onclick="window.location.href='duration_details.php'">รายละเอียดครุภัณฑ์</li><br>
     </ul>
   </div>
@@ -142,7 +144,7 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <div class="table">
-      <table>
+      <table id="durableArticlesTable">
         <thead>
           <tr>
             <th>ลำดับ </th>
@@ -152,7 +154,7 @@ $result = mysqli_query($conn, $sql);
             <th>หมายเลขครุภัณฑ์</th>
             <th>หมายเลขเครื่อง</th>
             <th>ตำแหน่งปัจจุบัน</th>
-            <th>ปีที่ซื้อ</th>
+            <th class="sortable" onclick="sortTable()">ปีที่ซื้อ <i class="fa fa-sort"></i></th>
             <th>สภาพการใช้งาน</th>
             <th>หมายเหตุ</th>
             <th>สถานะการใช้งาน</th>
@@ -222,7 +224,7 @@ $result = mysqli_query($conn, $sql);
             if ($row['status_of_use'] === 'Borrowed') {
               renderBorrowModal($modalId, $borrower, $Date, $row['borrowing_id'], $row['member_id']);
             }
-            
+
             if ($status_display === 'ว่าง') {
               renderBorrowFormModal($borrowModalId, $row['durable_articles_id']);
             }

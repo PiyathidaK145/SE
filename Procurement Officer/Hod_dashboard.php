@@ -92,7 +92,7 @@ $conn->close();
         <div class="logo"><img src="../image/logo.jpg" alt="Company Logo" style="width: 200px;"></div>
         <div class="profile">
             <div>
-                <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>หัวหน้าภาควิชา</span>
+                <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>นักวิชาการพัสดุ</span>
                 <a class="logout" href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
             </div>
         </div>
@@ -151,7 +151,7 @@ $conn->close();
                         <th>รุ่น</th>
                         <th>หมายเลขครุภัณฑ์</th>
                         <th>หมายเลขเครื่อง</th>
-                        <th class="sortable" onclick="sortTable(6)">ปีที่ซื้อ <i class="fa fa-sort"></i></th>
+                        <th class="sortable" onclick="sortTable()">ปีที่ซื้อ <i class="fa fa-sort"></i></th>
                         <th>สภาพการใช้งาน</th>
                     </tr>
                 </thead>

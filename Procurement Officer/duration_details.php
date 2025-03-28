@@ -1,5 +1,14 @@
 <?php
+session_start();
 include dirname(__FILE__) . '/../connet/connect.php';
+if (empty($_SESSION[WP . 'checklogin'])) {
+    $_SESSION['message']  = "ยังไม่ได้เข้าสู่ระบบ";
+    header("Location: {$base_url}/login.php");
+}
+
+$member_id = $_SESSION[WP . 'member_id'];
+$query = mysqli_query($conn, "SELECT * FROM tb_member WHERE member_id = '{$member_id}'") or die('query failed');
+$user = mysqli_fetch_assoc($query);
 
 $successCount = 0;
 $duplicateCount = 0;
@@ -214,9 +223,11 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8" />
     <title>แสดงรายละเอียดครุภัณฑ์</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/style_dash.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="../js/sort.js"></script>
 </head>
 <style>
     .action-btn {
@@ -237,21 +248,22 @@ $result = mysqli_query($conn, $sql);
         <div class="logo">
             <img src="../image/logo.jpg" alt="" style="width: 200px;">
         </div>
+
         <div class="profile">
-            <img src="https://i.pravatar.cc/50?img=3" alt="Profile" />
             <div>
-                <h4>David Grey. H</h4>
-                <span>Project Manager</span>
+                <h4><?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?></h4><span>นักวิชาการพัสดุ</span>
+                <a class="logout" href="<?php echo $base_url . '/logout.php'; ?>">Logout</a>
             </div>
         </div>
         <ul class="menu">
-            <button class="logout">logout</button>
+            <li onclick="window.location.href='Hod_dashboard.php'">Dashboard</li>
+            <li onclick="window.location.href='asset-table.php'">ดูตำแหน่งครุภัณฑ์</li>
+            <li class="active" onclick="window.location.href='duration_details.php'">รายละเอียดครุภัณฑ์</li><br>
         </ul>
     </div>
-
     <div class="main">
         <div class="topbar">
-            <?php include 'filter.php'; ?>
+            <?php include 'filter_PO.php'; ?>
         </div>
         <div class="upload-form">
             <form action="" method="post" enctype="multipart/form-data">
@@ -269,7 +281,7 @@ $result = mysqli_query($conn, $sql);
         </div>
 
         <div class="table">
-            <table>
+            <table id="durableArticlesTable">
                 <thead>
                     <tr>
                         <th>ลำดับ</th>
@@ -280,7 +292,7 @@ $result = mysqli_query($conn, $sql);
                         <th>หมายเลขเครื่อง</th>
                         <th>ตำแหน่งปัจจุบัน</th>
                         <th>ราคาต่อหน่วย</th>
-                        <th>ปีที่ซื้อ</th>
+                        <th class="sortable" onclick="sortTable()">ปีที่ซื้อ <i class="fa fa-sort"></i></th>
                         <th>รับประกัน</th>
                         <th>เพิ่มเติม</th>
                         <th>สภาพการใช้งาน</th>

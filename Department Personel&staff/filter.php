@@ -17,10 +17,6 @@ $status_query = mysqli_query($conn, "
     SELECT DISTINCT status_of_use FROM tb_borrowing
 ");
 
-// ดึงสภาพการใช้งาน
-$condition_query = mysqli_query($conn, "
-    SELECT DISTINCT condition_of_use FROM tb_durable_articles
-");
 ?>
 
 <form method="GET" style="display: flex; gap: 10px; align-items: center; white-space: nowrap; overflow-x: auto; flex-wrap: nowrap;">
@@ -44,17 +40,7 @@ $condition_query = mysqli_query($conn, "
       </option>
     <?php endwhile; ?>
   </select>
-
-  <!-- สภาพการใช้งาน -->
-  <select name="condition" style="width: 175px">
-    <option value="">สภาพการใช้งาน</option>
-
-    <option value="Working" <?= ($_GET['condition'] ?? '') == 'Working' ? 'selected' : '' ?>>ใช้งานได้</option>
-    <option value="Broken" <?= ($_GET['condition'] ?? '') == 'Broken' ? 'selected' : '' ?>>ชำรุด</option>
-    <option value="Damaged" <?= ($_GET['condition'] ?? '') == 'Damaged' ? 'selected' : '' ?>>เสียหาย</option>
-    <option value="Sold" <?= ($_GET['condition'] ?? '') == 'Sold' ? 'selected' : '' ?>>จำหน่ายแล้ว</option>
-  </select>
-
+  
   <!-- สถานะการใช้งาน -->
   <select name="status" style="width: 175px">
     <option value="">สถานะการใช้งาน</option>
